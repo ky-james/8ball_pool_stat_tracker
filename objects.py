@@ -46,7 +46,7 @@ class Player():
             self.redosTaken = None   
             self.redoTurns = None
             self.mostRedos = None
-            
+        # need to create a method that's similar to Game's init
 
 class Game():
     def __init__(self):
@@ -126,3 +126,6 @@ class Game():
         self.awayRedoTurns = None
         self.awayRedos = None
         self.awayMostRedos = None
+
+    def addGameStatsToPlayer(self, homePlayer, awayPlayer):
+        pass

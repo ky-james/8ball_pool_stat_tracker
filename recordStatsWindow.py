@@ -4,8 +4,11 @@ from PyQt5.QtGui import QPixmap
 
 
 class RecordStatsWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, stack):
         super().__init__()
+
+        # window stack instance variable
+        self.windowStack = stack
 
         # game variables
         self.selectedBall = '?'
@@ -20,6 +23,7 @@ class RecordStatsWindow(QMainWindow):
         self.sinkLog = []
         self.turnLog = []
         self.turnNumber = 0
+        self.ballWasSunkThisTurn = False
 
         self.openTable = True
         self.ballsOnTable = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
@@ -477,6 +481,7 @@ class RecordStatsWindow(QMainWindow):
         self.pocketFButton.clicked.connect(self.pocketFClicked)
 
         self.endTurnButton.clicked.connect(self.endTurn)
+        self.undoTurnButton.clicked.connect(self.undoTurn)
 
         self.show()
 
@@ -607,6 +612,8 @@ class RecordStatsWindow(QMainWindow):
     def sinkBall(self, ball, pocket):
         print(f"The {ball} was sunk in pocket {pocket}")
         self.sinkLog.append((ball, pocket))
+        self.turnLog.append((ball, pocket))
+        self.ballWasSunkThisTurn = True
 
         # this was the first ball sunk outside the break, determining who's solids/stripes
         if ball != 'cue' and self.turnNumber != 0:
@@ -640,6 +647,8 @@ class RecordStatsWindow(QMainWindow):
         ballObj.setEnabled(True)
         ballObj.setIconSize(QtCore.QSize(50, 50))
         ballObj.resize(50, 50)
+        ballObj.show()
+        self.ballsOnTable.append(ball)
 
     def endTurn(self):
         self.homeTurn = not self.homeTurn
@@ -651,8 +660,6 @@ class RecordStatsWindow(QMainWindow):
             else:
                 ball = self.ballButtonDict[item[0]]
                 ball.hide()
-
-        self.turnLog.append(self.sinkLog)
 
         # shooting icon
         if self.homeTurn:
@@ -674,8 +681,40 @@ class RecordStatsWindow(QMainWindow):
         if self.aimbotShot:
             self.toggleAimbotShot()
 
-        # brady edit here!
+        # updating the game logs if a ball was not sunk
+        if not self.ballWasSunkThisTurn:
+            self.turnLog.append("miss")
+        self.ballWasSunkThisTurn = False
+
+        # printing a turn recap to the console
+        print("\n End of the turn")
+        print(f"Turn log after this turn: {self.turnLog}")
+        print(f"Sink log after this turn: {self.sinkLog}")
+
+        # checking if the game is over
+        if '8' not in self.ballsOnTable:
+
+            # returning all the balls to the table
+            for ball in self.ballButtonDict.keys():
+                self.returnBallGraphics(ball)
+
+
+            self.windowStack.setCurrentIndex(3)
+
 
     def undoTurn(self):
-        # TODO: complete function
-        pass
+        # removing the last turn from the logs
+        if len(self.turnLog) > 0:
+            # removing a sink
+            if self.turnLog[-1] != "miss":
+                undoMove = self.sinkLog[-1]
+                undoBall = undoMove[0]
+                self.ballsOnTable.append(undoBall)
+                self.returnBallGraphics(undoBall)
+                self.turnLog.remove(self.sinkLog.pop())
+            # removing a miss
+            else:
+                self.turnLog.pop()
+
+        else:
+            print("No moves in turn log to remove")

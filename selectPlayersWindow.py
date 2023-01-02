@@ -82,6 +82,9 @@ class SelectPlayersWindow(QMainWindow):
             self.homeComboBox.addItem(playerList[i].name)
             self.awayComboBox.addItem(playerList[i].name)
 
+        # initializing awayComboBox to be set at a different player than homeComboBox's player
+        self.awayComboBox.setCurrentIndex(1)
+
         # break check box
         self.breakCheckBox = QCheckBox(self)
         self.breakCheckBox.setText("Home Breaks")

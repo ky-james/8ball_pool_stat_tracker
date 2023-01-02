@@ -20,14 +20,14 @@ class GameRecapWindow(QMainWindow):
         # winner and looser titles
         self.winnerTitleLabel = QLabel("Winner", self)
         self.winnerTitleLabel.resize(300, 100)
-        self.winnerTitleLabel.setStyleSheet("color: rgb(0, 76, 153);"
+        self.winnerTitleLabel.setStyleSheet("color: rgb(0, 225, 0);"
                                             "background-color: transparent;"
                                             "font-size: 75px;")
         self.winnerTitleLabel.move(200, 0)
 
         self.looserTitleLabel = QLabel("Looser", self)
         self.looserTitleLabel.resize(300, 100)
-        self.looserTitleLabel.setStyleSheet("color: rgb(0, 76, 153);"
+        self.looserTitleLabel.setStyleSheet("color: rgb(255, 0, 0);"
                                             "background-color: transparent;"
                                             "font-size: 75px;")
         self.looserTitleLabel.move(800, 0)
