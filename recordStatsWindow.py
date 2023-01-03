@@ -610,7 +610,6 @@ class RecordStatsWindow(QMainWindow):
             self.sinkBall(self.selectedBall, self.selectedPocket)
 
     def sinkBall(self, ball, pocket):
-        print(f"The {ball} was sunk in pocket {pocket}")
         self.sinkLog.append((ball, pocket))
         self.turnLog.append((ball, pocket))
         self.ballWasSunkThisTurn = True

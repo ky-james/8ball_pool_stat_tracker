@@ -19,6 +19,7 @@ def findNewestStatSheetName():
 
     return "stat_sheets/" + statSheetName
 
+
 def parseData(statSheetName):
     statSheet = open(statSheetName)
 
