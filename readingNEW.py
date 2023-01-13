@@ -1,6 +1,8 @@
 import os
 from objectsNEW import Player, Game
 
+# Testing: completed
+# Integration: to be completed
 
 def findNewestStatSheetName():
     """
@@ -40,10 +42,6 @@ def findNewestStatSheetName():
 
 
 def parseData(statSheetName):
-    """
-    :param statSheetName:
-    :return: playerList, gameList, playerDict (keys: string of a player name & values: player object
-    """
 
     statSheet = open(statSheetName)
     playerList = []
@@ -55,7 +53,7 @@ def parseData(statSheetName):
         line = line.split(',')
 
         # if the line is the header for players
-        if line[0] == "\ufeffPlayerName":
+        if line[0] == "Player Name":
             pass
 
         # if the line is the header for games
@@ -69,43 +67,43 @@ def parseData(statSheetName):
 
             # filling the player object with the player's stats
             playerObj.playerName = line[0]
-            playerObj.gamesPlayed = line[1]
-            playerObj.wins = line[2]
-            playerObj.losses = line[3]
-            playerObj.solids = line[4]
-            playerObj.stripes = line[5]
-            playerObj.winsByChoke = line[6]
-            playerObj.lossesByChoke = line[7]
-            playerObj.breaks = line[8]
-            playerObj.ballsSunkOffBreak = line[9]
-            playerObj.shotsTaken = line[10]
-            playerObj.shotsMade = line[11]
-            playerObj.shotsMissed = line[12]
-            playerObj.bankShotsTaken = line[13]
-            playerObj.bankShotsMade = line[14]
-            playerObj.bankShotsMissed = line[15]
-            playerObj.bridgeShotsTaken = line[16]
-            playerObj.bridgeShotsMade = line[17]
-            playerObj.bridgeShotsMissed = line[18]
-            playerObj.behindTheBackShotsTaken = line[19]
-            playerObj.behindTheBackShotsMade = line[20]
-            playerObj.behindTheBackShotsMissed = line[21]
-            playerObj.jumpShotsTaken = line[22]
-            playerObj.jumpShotsMade = line[23]
-            playerObj.jumpShotsMissed = line[24]
-            playerObj.eightBallShotsTaken = line[25]
-            playerObj.eightBallShotsMade = line[26]
-            playerObj.eightBallShotsMissed = line[27]
-            playerObj.opponentBallsSunk = line[28]
-            playerObj.ballsSunkByOpponent = line[29]
-            playerObj.scratchesMade = line[30]
-            playerObj.opponentScratches = line[31]
-            playerObj.ballsSunkInPocketA = line[32]
-            playerObj.ballsSunkInPocketB = line[33]
-            playerObj.ballsSunkInPocketC = line[34]
-            playerObj.ballsSunkInPocketD = line[35]
-            playerObj.ballsSunkInPocketE = line[36]
-            playerObj.ballsSunkInPocketF = line[37]
+            playerObj.gamesPlayed = int(line[1])
+            playerObj.wins = int(line[2])
+            playerObj.losses = int(line[3])
+            playerObj.solids = int(line[4])
+            playerObj.stripes = int(line[5])
+            playerObj.winsByChoke = int(line[6])
+            playerObj.lossesByChoke = int(line[7])
+            playerObj.breaks = int(line[8])
+            playerObj.ballsSunkOffBreak = int(line[9])
+            playerObj.shotsTaken = int(line[10])
+            playerObj.shotsMade = int(line[11])
+            playerObj.shotsMissed = int(line[12])
+            playerObj.bankShotsTaken = int(line[13])
+            playerObj.bankShotsMade = int(line[14])
+            playerObj.bankShotsMissed = int(line[15])
+            playerObj.bridgeShotsTaken = int(line[16])
+            playerObj.bridgeShotsMade = int(line[17])
+            playerObj.bridgeShotsMissed = int(line[18])
+            playerObj.behindTheBackShotsTaken = int(line[19])
+            playerObj.behindTheBackShotsMade = int(line[20])
+            playerObj.behindTheBackShotsMissed = int(line[21])
+            playerObj.jumpShotsTaken = int(line[22])
+            playerObj.jumpShotsMade = int(line[23])
+            playerObj.jumpShotsMissed = int(line[24])
+            playerObj.eightBallShotsTaken = int(line[25])
+            playerObj.eightBallShotsMade = int(line[26])
+            playerObj.eightBallShotsMissed = int(line[27])
+            playerObj.opponentBallsSunk = int(line[28])
+            playerObj.ballsSunkByOpponent = int(line[29])
+            playerObj.scratchesMade = int(line[30])
+            playerObj.opponentScratches = int(line[31])
+            playerObj.ballsSunkInPocketA = int(line[32])
+            playerObj.ballsSunkInPocketB = int(line[33])
+            playerObj.ballsSunkInPocketC = int(line[34])
+            playerObj.ballsSunkInPocketD = int(line[35])
+            playerObj.ballsSunkInPocketE = int(line[36])
+            playerObj.ballsSunkInPocketF = int(line[37])
 
             # appending the player to the player list and dictionary
             playerList.append(playerObj)
@@ -117,72 +115,72 @@ def parseData(statSheetName):
             gameObj = Game()
 
             # filling the game object with the game's stats
-            gameObj.gameNumber = line[0]
-            gameObj.date = line[1]
-            gameObj.BP = line[2]
-            gameObj.IP = line[3]
-            gameObj.BPBallGroup = line[4]
-            gameObj.IPBallGroup = line[5]
-            gameObj.winner = line[6]
-            gameObj.loser = line[7]
-            gameObj.gameWonByChoke = line[8]
-            gameObj.ballsSunkOffBreak = line[9]
-            gameObj.BPShotsTaken = line[10]
-            gameObj.BPShotsMade = line[11]
-            gameObj.BPShotsMissed = line[12]
-            gameObj.BPBankShotsTaken = line[13]
-            gameObj.BPBankShotsMade = line[14]
-            gameObj.BPBankShotsMissed = line[15]
-            gameObj.BPBridgeShotsTaken = line[16]
-            gameObj.BPBridgeShotsMade = line[17]
-            gameObj.BPBridgeShotsMissed = line[18]
-            gameObj.BPBehindTheBackShotsTaken = line[19]
-            gameObj.BPBehindTheBackShotsMade = line[20]
-            gameObj.BPBehindTheBackShotsMissed = line[21]
-            gameObj.BPJumpShotsTaken = line[22]
-            gameObj.BPJumpShotsMade = line[23]
-            gameObj.BPJumpShotsMissed = line[24]
-            gameObj.BPEightBallShotsTaken = line[25]
-            gameObj.BPEightBallShotsMade = line[26]
-            gameObj.BPEightBallShotsMissed = line[27]
-            gameObj.BPOpponentBallsSunk = line[28]
-            gameObj.BPBallsSunkByOpponent = line[29]
-            gameObj.BPScratchesMade = line[30]
-            gameObj.BPOpponentScratches = line[31]
-            gameObj.BPBallsSunkInPocketA = line[32]
-            gameObj.BPBallsSunkInPocketB = line[33]
-            gameObj.BPBallsSunkInPocketC = line[34]
-            gameObj.BPBallsSunkInPocketD = line[35]
-            gameObj.BPBallsSunkInPocketE = line[36]
-            gameObj.BPBallsSunkInPocketF = line[37]
-            gameObj.IPShotsTaken = line[38]
-            gameObj.IPShotsMade = line[39]
-            gameObj.IPShotsMissed = line[40]
-            gameObj.IPBankShotsTaken = line[41]
-            gameObj.IPBankShotsMade = line[42]
-            gameObj.IPBankShotsMissed = line[43]
-            gameObj.IPBridgeShotsTaken = line[44]
-            gameObj.IPBridgeShotsMade = line[45]
-            gameObj.IPBridgeShotsMissed = line[46]
-            gameObj.IPBehindTheBackShotsTaken = line[47]
-            gameObj.IPBehindTheBackShotsMade = line[48]
-            gameObj.IPBehindTheBackShotsMissed = line[49]
-            gameObj.IPJumpShotsTaken = line[50]
-            gameObj.IPJumpShotsMade = line[51]
-            gameObj.IPJumpShotsMissed = line[52]
-            gameObj.IPEightBallShotsTaken = line[53]
-            gameObj.IPEightBallShotsMade = line[54]
-            gameObj.IPEightBallShotsMissed = line[55]
-            gameObj.IPOpponentBallsSunk = line[56]
-            gameObj.IPBallsSunkByOpponent = line[57]
-            gameObj.IPScratchesMade = line[58]
-            gameObj.IPOpponentScratches = line[59]
-            gameObj.IPBallsSunkInPocketA = line[60]
-            gameObj.IPBallsSunkInPocketB = line[61]
-            gameObj.IPBallsSunkInPocketC = line[62]
-            gameObj.IPBallsSunkInPocketD = line[63]
-            gameObj.IPBallsSunkInPocketE = line[64]
-            gameObj.IPBallsSunkInPocketF = line[65]
+            gameObj.gameNumber = int(line[0])
+            gameObj.date = int(line[1])
+            gameObj.BP = int(line[2])
+            gameObj.IP = int(line[3])
+            gameObj.BPBallGroup = int(line[4])
+            gameObj.IPBallGroup = int(line[5])
+            gameObj.winner = int(line[6])
+            gameObj.loser = int(line[7])
+            gameObj.gameWonByChoke = int(line[8])
+            gameObj.ballsSunkOffBreak = int(line[9])
+            gameObj.BPShotsTaken = int(line[10])
+            gameObj.BPShotsMade = int(line[11])
+            gameObj.BPShotsMissed = int(line[12])
+            gameObj.BPBankShotsTaken = int(line[13])
+            gameObj.BPBankShotsMade = int(line[14])
+            gameObj.BPBankShotsMissed = int(line[15])
+            gameObj.BPBridgeShotsTaken = int(line[16])
+            gameObj.BPBridgeShotsMade = int(line[17])
+            gameObj.BPBridgeShotsMissed = int(line[18])
+            gameObj.BPBehindTheBackShotsTaken = int(line[19])
+            gameObj.BPBehindTheBackShotsMade = int(line[20])
+            gameObj.BPBehindTheBackShotsMissed = int(line[21])
+            gameObj.BPJumpShotsTaken = int(line[22])
+            gameObj.BPJumpShotsMade = int(line[23])
+            gameObj.BPJumpShotsMissed = int(line[24])
+            gameObj.BPEightBallShotsTaken = int(line[25])
+            gameObj.BPEightBallShotsMade = int(line[26])
+            gameObj.BPEightBallShotsMissed = int(line[27])
+            gameObj.BPOpponentBallsSunk = int(line[28])
+            gameObj.BPBallsSunkByOpponent = int(line[29])
+            gameObj.BPScratchesMade = int(line[30])
+            gameObj.BPOpponentScratches = int(line[31])
+            gameObj.BPBallsSunkInPocketA = int(line[32])
+            gameObj.BPBallsSunkInPocketB = int(line[33])
+            gameObj.BPBallsSunkInPocketC = int(line[34])
+            gameObj.BPBallsSunkInPocketD = int(line[35])
+            gameObj.BPBallsSunkInPocketE = int(line[36])
+            gameObj.BPBallsSunkInPocketF = int(line[37])
+            gameObj.IPShotsTaken = int(line[38])
+            gameObj.IPShotsMade = int(line[39])
+            gameObj.IPShotsMissed = int(line[40])
+            gameObj.IPBankShotsTaken = int(line[41])
+            gameObj.IPBankShotsMade = int(line[42])
+            gameObj.IPBankShotsMissed = int(line[43])
+            gameObj.IPBridgeShotsTaken = int(line[44])
+            gameObj.IPBridgeShotsMade = int(line[45])
+            gameObj.IPBridgeShotsMissed = int(line[46])
+            gameObj.IPBehindTheBackShotsTaken = int(line[47])
+            gameObj.IPBehindTheBackShotsMade = int(line[48])
+            gameObj.IPBehindTheBackShotsMissed = int(line[49])
+            gameObj.IPJumpShotsTaken = int(line[50])
+            gameObj.IPJumpShotsMade = int(line[51])
+            gameObj.IPJumpShotsMissed = int(line[52])
+            gameObj.IPEightBallShotsTaken = int(line[53])
+            gameObj.IPEightBallShotsMade = int(line[54])
+            gameObj.IPEightBallShotsMissed = int(line[55])
+            gameObj.IPOpponentBallsSunk = int(line[56])
+            gameObj.IPBallsSunkByOpponent = int(line[57])
+            gameObj.IPScratchesMade = int(line[58])
+            gameObj.IPOpponentScratches = int(line[59])
+            gameObj.IPBallsSunkInPocketA = int(line[60])
+            gameObj.IPBallsSunkInPocketB = int(line[61])
+            gameObj.IPBallsSunkInPocketC = int(line[62])
+            gameObj.IPBallsSunkInPocketD = int(line[63])
+            gameObj.IPBallsSunkInPocketE = int(line[64])
+            gameObj.IPBallsSunkInPocketF = int(line[65])
 
             # adding the game object to the game list
             gameList.append(gameObj)

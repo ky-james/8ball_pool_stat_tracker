@@ -1,6 +1,9 @@
-from reading import findNewestStatSheetName
+from readingNEW import findNewestStatSheetName
 import csv
-import shutil  # this might not be needed
+import shutil
+
+# Testing: completed
+# Integration: to be completed
 
 # long lists which will be used in the writing functions
 playerHeaders = ["Player Name", "Games Played", "Wins", "Losses", "Stripes", "Solids", "Wins by Choke",
@@ -36,7 +39,7 @@ gameHeaders = ["Game Number", "Date", "BP", "IP", "BP Ball Group", "IP Ball Grou
 def writeNewCSV(playerList, gameList):
     # creating the name of the new stat sheet
     currStatSheetName = findNewestStatSheetName()
-    newStatSheetNum = int(currStatSheetName[0]) + 1
+    newStatSheetNum = int(currStatSheetName[12]) + 1
     newStatSheetName = str(newStatSheetNum) + "_stat_sheet.csv"
 
     # writing stats to the file
@@ -55,4 +58,7 @@ def writeNewCSV(playerList, gameList):
             gameVars = vars(game).values()
             writer.writerow(gameVars)
 
-    return newStatSheetName # unsure if this is required
+    # moving the stat sheet to the proper directory
+    shutil.move(newStatSheetName, "stat_sheets/")
+
+    return newStatSheetName
