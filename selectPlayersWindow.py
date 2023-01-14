@@ -25,22 +25,22 @@ class SelectPlayersWindow(QMainWindow):
                                       "font-size: 100px;")
         self.titleLabel.move(350, 0)
 
-        # home label
-        self.homeLabel = QLabel("Home Player", self)
-        self.homeLabel.resize(500, 75)
-        self.homeLabel.setStyleSheet("color: white; font-size: 40px;")
-        self.homeLabel.move(150, 200)
+        # breaking player label
+        self.breakingPlayerLabel = QLabel("Breaking Player", self)
+        self.breakingPlayerLabel.resize(500, 75)
+        self.breakingPlayerLabel.setStyleSheet("color: white; font-size: 40px;")
+        self.breakingPlayerLabel.move(135, 200)
 
-        # away label
-        self.awayLabel = QLabel("Away Player", self)
-        self.awayLabel.resize(500, 75)
-        self.awayLabel.setStyleSheet("color: white; font-size: 40px;")
-        self.awayLabel.move(850, 200)
+        # incoming player label
+        self.incomingPlayerLabel = QLabel("Incoming Player", self)
+        self.incomingPlayerLabel.resize(500, 75)
+        self.incomingPlayerLabel.setStyleSheet("color: white; font-size: 40px;")
+        self.incomingPlayerLabel.move(820, 200)
 
-        # home combo box
-        self.homeComboBox = QComboBox(self)
-        self.homeComboBox.setGeometry(200, 150, 220, 75)
-        self.homeComboBox.setStyleSheet("QComboBox{"
+        # breaking player combo box
+        self.breakingPlayerComboBox = QComboBox(self)
+        self.breakingPlayerComboBox.setGeometry(200, 150, 220, 75)
+        self.breakingPlayerComboBox.setStyleSheet("QComboBox{"
                                         "color: white;"
                                         "background-color: rgb(0, 40, 80);"
                                         "font-size: 30px;"
@@ -55,12 +55,12 @@ class SelectPlayersWindow(QMainWindow):
                                         "QComboBox QListView{"
                                         "border: 2px solid white;"
                                         "}")
-        self.homeComboBox.move(150, 275)
+        self.breakingPlayerComboBox.move(150, 275)
 
-        # away combo box
-        self.awayComboBox = QComboBox(self)
-        self.awayComboBox.setGeometry(200, 150, 210, 75)
-        self.awayComboBox.setStyleSheet("QComboBox{"
+        # incoming player combo box
+        self.incomingPlayerComboBox = QComboBox(self)
+        self.incomingPlayerComboBox.setGeometry(200, 150, 210, 75)
+        self.incomingPlayerComboBox.setStyleSheet("QComboBox{"
                                         "color: white;"
                                         "background-color: rgb(0, 40, 80);"
                                         "font-size: 30px;"
@@ -75,39 +75,15 @@ class SelectPlayersWindow(QMainWindow):
                                         "QComboBox QListView{"
                                         "border: 2px solid white;"
                                         "}")
-        self.awayComboBox.move(850, 275)
+        self.incomingPlayerComboBox.move(850, 275)
 
-        # updating combo boxes
-        for i in range(1, len(playerList)):
-            self.homeComboBox.addItem(playerList[i].name)
-            self.awayComboBox.addItem(playerList[i].name)
+        # filling combo boxes with player names
+        for i in range(0, len(playerList)):
+            self.breakingPlayerComboBox.addItem(playerList[i].playerName)
+            self.incomingPlayerComboBox.addItem(playerList[i].playerName)
 
-        # initializing awayComboBox to be set at a different player than homeComboBox's player
-        self.awayComboBox.setCurrentIndex(1)
-
-        # break check box
-        self.breakCheckBox = QCheckBox(self)
-        self.breakCheckBox.setText("Home Breaks")
-        self.breakCheckBox.setGeometry(200, 150, 180, 60)
-        self.breakCheckBox.setStyleSheet("QCheckBox{"
-                                         "background-color: rgb(0, 40, 80); "
-                                         "color: white;"
-                                         "border-style: outset;"
-                                         "border-width: 4px;"
-                                         "border-color: white;"
-                                         "border-radius: 50px;"
-                                         "font-size: 23px;"
-                                         "}"
-                                         "QCheckBox:unchecked{"
-                                         "color: red;"
-                                         "}"
-                                         "QCheckBox:checked{"
-                                         "color: green;"
-                                         "}"
-                                         "QCheckBox:hover{"
-                                         "background-color: rgb(0, 76, 153)"
-                                         "}")
-        self.breakCheckBox.move(510, 285)
+        # initializing incomingPlayerComboBox to be set at a different player than breakingPlayer's player
+        self.incomingPlayerComboBox.setCurrentIndex(1)
 
         # start game pushbutton
         self.startGameButton = QPushButton("Start Game", self)

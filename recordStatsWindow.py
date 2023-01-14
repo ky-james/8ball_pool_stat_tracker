@@ -14,12 +14,11 @@ class RecordStatsWindow(QMainWindow):
         self.selectedBall = '?'
         self.selectedPocket = '?'
 
-        self.homePlayer = '?'
-        self.awayPlayer = '?'
         self.breakingPlayer = '?'
+        self.incomingPlayer = '?'
         self.solids = '?'
         self.stripes = '?'
-        self.homeTurn = '?'  # is changed to boolean in GUI_main.py
+        self.breakingPlayerTurn = '?'  # is changed to boolean in GUI_main.py
         self.sinkLog = []
         self.turnLog = []
         self.turnNumber = 0
@@ -36,7 +35,7 @@ class RecordStatsWindow(QMainWindow):
                                            '5': (450, 360), '6': (525, 360), '7': (600, 360), '8': (675, 360),
                                            '9': (150, 435), '10': (225, 435), '11': (300, 435), '12': (375, 435),
                                            '13': (450, 435), '14': (525, 435), '15': (600, 435), 'cue': (675, 435)}
-        self.shootingIconCoordinateDict = {'home': (135, 115), 'away': (820, 115)}
+        self.shootingIconCoordinateDict = {'breakingPlayer': (135, 115), 'incomingPlayer': (820, 115)}
 
         self.turnLog = []
         self.jumpShot = False
@@ -57,41 +56,41 @@ class RecordStatsWindow(QMainWindow):
                                                 "font-size: 80px;")
         self.titleBackgroundLabel.move(0, 0)
 
-        # home label
-        self.homeLabel = QLabel("Home Player", self)
-        self.homeLabel.resize(500, 75)
-        self.homeLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
-        self.homeLabel.move(100, 20)
+        # breaking label
+        self.breakingLabel = QLabel("Breaking Player", self)
+        self.breakingLabel.resize(500, 75)
+        self.breakingLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
+        self.breakingLabel.move(100, 20)
 
-        # away label
-        self.awayLabel = QLabel("Away Player", self)
-        self.awayLabel.resize(500, 75)
-        self.awayLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
-        self.awayLabel.move(775, 20)
+        # incoming label
+        self.incomingLabel = QLabel("Incoming Player", self)
+        self.incomingLabel.resize(500, 75)
+        self.incomingLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
+        self.incomingLabel.move(775, 20)
 
-        # home player label
-        self.homePlayerLabel = QLabel("Kyle", self)
-        self.homePlayerLabel.resize(500, 75)
-        self.homePlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.homePlayerLabel.move(210, 85)
+        # break player label
+        self.breakingPlayerLabel = QLabel("Kyle", self)
+        self.breakingPlayerLabel.resize(500, 75)
+        self.breakingPlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.breakingPlayerLabel.move(210, 85)
 
-        # away player label
-        self.awayPlayerLabel = QLabel("Brady", self)
-        self.awayPlayerLabel.resize(500, 75)
-        self.awayPlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.awayPlayerLabel.move(880, 85)
+        # incoming player label
+        self.incomingPlayerLabel = QLabel("Brady", self)
+        self.incomingPlayerLabel.resize(500, 75)
+        self.incomingPlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.incomingPlayerLabel.move(880, 85)
 
-        # home player record
-        self.homeRecordLabel = QLabel("", self)
-        self.homeRecordLabel.resize(500, 75)
-        self.homeRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.homeRecordLabel.move(210, 130)
+        # breaking player record
+        self.breakingPlayerRecordLabel = QLabel("", self)
+        self.breakingPlayerRecordLabel.resize(500, 75)
+        self.breakingPlayerRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.breakingPlayerRecordLabel.move(210, 130)
 
-        # away player record
-        self.awayRecordLabel = QLabel("", self)
-        self.awayRecordLabel.resize(500, 75)
-        self.awayRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.awayRecordLabel.move(880, 135)
+        # incoming player record
+        self.incomingPlayerRecordLabel = QLabel("", self)
+        self.incomingPlayerRecordLabel.resize(500, 75)
+        self.incomingPlayerRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.incomingPlayerRecordLabel.move(880, 135)
 
         # shooting icon
         self.shootingIcon = QLabel('', self)
@@ -616,16 +615,16 @@ class RecordStatsWindow(QMainWindow):
 
         # this was the first ball sunk outside the break, determining who's solids/stripes
         if ball != 'cue' and self.turnNumber != 0:
-            if self.homeTurn:
+            if self.breakingPlayerTurn:
                 if ball in self.solidBalls:
-                    self.solids = 'home'
+                    self.solids = 'breakingPlayer'
                 else:
-                    self.stripes = 'home'
+                    self.stripes = 'breakingPlayer'
             else:
                 if ball in self.solidBalls:
-                    self.solids = 'away'
+                    self.solids = 'incomingPlayer'
                 else:
-                    self.solids = 'away'
+                    self.solids = 'incomingPlayer'
 
         self.sinkBallGraphics(self.ballButtonDict[ball], pocket)
         self.selectedBall = '?'
@@ -650,7 +649,7 @@ class RecordStatsWindow(QMainWindow):
         self.ballsOnTable.append(ball)
 
     def endTurn(self):
-        self.homeTurn = not self.homeTurn
+        self.breakingPlayerTurn = not self.breakingPlayerTurn
         self.turnNumber += 1
 
         for item in self.sinkLog:
@@ -661,12 +660,12 @@ class RecordStatsWindow(QMainWindow):
                 ball.hide()
 
         # shooting icon
-        if self.homeTurn:
-            self.shootingIcon.move(self.shootingIconCoordinateDict['home'][0],
-                                   self.shootingIconCoordinateDict['home'][1])
+        if self.breakingPlayerTurn:
+            self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
+                                   self.shootingIconCoordinateDict['breakingPlayer'][1])
         else:
-            self.shootingIcon.move(self.shootingIconCoordinateDict['away'][0],
-                                   self.shootingIconCoordinateDict['away'][1])
+            self.shootingIcon.move(self.shootingIconCoordinateDict['incomingPlayer'][0],
+                                   self.shootingIconCoordinateDict['incomingPlayer'][1])
         # shot options
         if self.bankShot:
             self.toggleBankShot()

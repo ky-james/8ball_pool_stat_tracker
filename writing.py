@@ -2,65 +2,63 @@ from reading import findNewestStatSheetName
 import csv
 import shutil
 
+# Testing: completed
+# Integration: to be completed
+
+# long lists which will be used in the writing functions
+playerHeaders = ["Player Name", "Games Played", "Wins", "Losses", "Stripes", "Solids", "Wins by Choke",
+                 "Losses by Choke", "Breaks", "Balls Sunk off Break", "Shots Taken", "Shots Made", "Shots Missed",
+                 "Bank Shots Taken", "Bank Shots Made", "Bank Shots Missed", "Bridge Shots Taken",
+                 "Bridge Shots Made", "Bridge Shots Missed", "Behind the Back Shots Taken",
+                 "Behind the Back Shots Made", "Behind the Back Shots Missed", "Jump Shots Taken", "Jump Shots Made",
+                 "Jump Shots Missed", "8 Ball Shots Taken", "8 Ball Shots Made", "8 Ball Shots Missed",
+                 "Opponent Balls Sunk", "Balls Sunk by Opponent", "Scratches Made", "Opponent Scratches",
+                 "Balls Sunk in Pocket A", "Balls Sunk in Pocket B", "Balls Sunk in Pocket C",
+                 "Balls Sunk in Pocket D", "Balls Sunk in Pocket E", "Balls Sunk in Pocket F"]
+
+gameHeaders = ["Game Number", "Date", "BP", "IP", "BP Ball Group", "IP Ball Group", "Winner", "Loser",
+               "Game Won by Choke", "Balls Sunk off Break", "BP Shots Taken", "BP Shots Made", "BP Shots Missed",
+               "BP Bank Shots Taken", "BP Bank Shots Made", "BP Bank Shots Missed", "BP Bridge Shots Taken",
+               "BP Bridge Shots Made", "BP Bridge Shots Missed", "BP Behind the Back Shots Taken",
+               "BP Behind the Back Shots Made", "BP Behind the Back Shots Missed", "BP Jump Shots Taken",
+               "BP Jump Shots Made", "BP Jump Shots Missed", "BP 8 Ball Shots Taken", "BP 8 Ball Shots Made",
+               "BP 8 Ball Shots Missed", "BP Opponent Balls Sunk", "BP Balls Sunk by Opponent", "BP Scratches Made",
+               "BP Opponent Scratches", "BP Balls Sunk in Pocket A", "BP Balls Sunk in Pocket B",
+               "BP Balls Sunk in Pocket C", "BP Balls Sunk in Pocket D", "BP Balls Sunk in Pocket E",
+               "BP  Balls Sunk in Pocket F", "IP Shots Taken", "IP Shots Made", "IP Shots Missed",
+               "IP Bank Shots Taken", "IP Bank Shots Made", "IP Bank Shots Missed", "IP Bridge Shots Taken",
+               "IP Bridge Shots Made", "IP Bridge Shots Missed", "IP Behind the Back Shots Taken",
+               "IP Behind the Back Shots Made", "IP Behind the Back Shots Missed", "IP Jump Shots Taken",
+               "IP Jump Shots Made", "IP Jump Shots Missed", "IP 8 Ball Shots Taken", "IP 8 Ball Shots Made",
+               "IP 8 Ball Shots Missed", "IP Opponent Balls Sunk", "IP Balls Sunk by Opponent", "IP Scratches Made",
+               "IP Opponent Scratches", "IP Balls Sunk in Pocket A", "IP Balls Sunk in Pocket B",
+               "IP Balls Sunk in Pocket C", "IP Balls Sunk in Pocket D", "IP Balls Sunk in Pocket E",
+               "IP  Balls Sunk in Pocket F"]
+
 
 def writeNewCSV(playerList, gameList):
-    curStatSheetName = findNewestStatSheetName()
-    newStatSheetNum = '?'
-
-    for i in range(len(curStatSheetName)):
-        if curStatSheetName[i].isnumeric():
-            newStatSheetNum = int(curStatSheetName[i]) + 1
-            break
-
+    # creating the name of the new stat sheet
+    currStatSheetName = findNewestStatSheetName()
+    newStatSheetNum = int(currStatSheetName[12]) + 1
     newStatSheetName = str(newStatSheetNum) + "_stat_sheet.csv"
 
-    playerHeaders = ['Player Name', 'Games played', 'Wins', 'Losses', 'Solids', 'Stripes', 'Choke wins', 'Choke losses',
-                     'Faceoffs taken', 'Faceoff wins', 'Faceoff losses', 'Breaks', 'Balls sunk off break',
-                     'Shots taken', 'Balls sunk', 'Shots missed', 'Balls sunk by opponent', 'Opponent balls sunk',
-                     'Bank shots taken', 'Bank shots made', 'Bank shots missed', 'Aimbot shots taken',
-                     'Aimbot shots made', 'Aimbot shots missed', 'Behind the back shots taken',
-                     'Behind the back shots made', 'Behind the back shots missed', 'Jump shots taken',
-                     'Jump shots made', 'Jump shots missed', 'Eight ball shots taken', 'Eight ball shots made',
-                     'Eight ball shots missed', 'Balls sunk in pocket A', 'Balls sunk in pocket B',
-                     'Balls sunk in pocket C', 'Balls sunk in pocket D', 'Balls sunk in pocket E',
-                     'Balls sunk in pocket F', 'Most shots made in a turn', 'Scratches', 'Balls in hand',
-                     'Balls off table', 'Redo turns', 'Redos taken', 'Most Redos']
-    gameHeaders = ['Game #', 'Date', 'Home', 'Away', 'Winner', 'Game won by choke', 'Break', 'Balls sunk off break',
-                   'Home ball type', 'Home shots taken', 'Home shots made', 'Home shots missed',
-                   'Home opponent balls sunk', 'Home balls sunk by opponent', 'Home bank shots taken',
-                   'Home bank shots made', 'Home bank shots missed', 'Home aimbot shots taken',
-                   'Home aimbot shots made', 'Home aimbot shots missed', 'Home behind the back shots taken',
-                   'Home behind the back shots made', 'Home behind the back shots missed', 'Home jump shots taken',
-                   'Home jump shots made', 'Home jump shots missed', 'Home eight ball shots taken',
-                   'Home eight ball shots made', 'Home eight ball shots missed', 'Home balls sunk in pocket A',
-                   'Home balls sunk in pocket B', 'Home balls sunk in pocket C', 'Home balls sunk in pocket D',
-                   'Home balls sunk in pocket E', 'Home balls sunk in pocket F', 'Home scratches', 'Home balls in hand',
-                   'Home balls off table', 'Home chokes', 'Home redo turns', 'Home redos taken', 'Home most redos',
-                   'Away ball type', 'Away shots taken', 'Away shots made', 'Away shots missed',
-                   'Away opponent balls sunk', 'Away balls sunk by opponent', 'Away bank shots taken',
-                   'Away bank shots made', 'Away bank shots missed', 'Away aimbot shots taken',
-                   'Away aimbot shots made', 'Away aimbot shots missed', 'Away behind the back shots taken',
-                   'Away behind the back shots made', 'Away behind the back shots missed', 'Away jump shots taken',
-                   'Away jump shots made', 'Away jump shots missed', 'Away eight ball shots taken',
-                   'Away eight ball shots made', 'Away eight ball shots missed', 'Away balls sunk in pocket A',
-                   'Away balls sunk in pocket B', 'Away balls sunk in pocket C', 'Away balls sunk in pocket D',
-                   'Away balls sunk in pocket E', 'Away balls sunk in pocket F', 'Away scratches', 'Away balls in hand',
-                   'Away balls off table', 'Away chokes', 'Away redo turns', 'Away redos taken', 'Away most redos']
-
+    # writing stats to the file
     with open(newStatSheetName, 'w') as file:
         writer = csv.writer(file)
-        writer.writerow(playerHeaders)
 
-        # write player stats
+        # writing the player stats
+        writer.writerow(playerHeaders)
         for player in playerList:
             playerVars = vars(player).values()
             writer.writerow(playerVars)
 
+        # writing game stats
         writer.writerow(gameHeaders)
-
-        # write game stats
         for game in gameList:
             gameVars = vars(game).values()
             writer.writerow(gameVars)
+
+    # moving the stat sheet to the proper directory
+    shutil.move(newStatSheetName, "stat_sheets/")
 
     return newStatSheetName

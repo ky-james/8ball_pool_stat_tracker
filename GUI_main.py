@@ -10,20 +10,10 @@ from recordStatsWindow import RecordStatsWindow
 from gameRecapWindow import GameRecapWindow
 from objects import Game, Player
 
-# TODO:
-# replace and integrate objectsNEW.py, readingNEW.py and writingNEW.py
-# Things to consider while integrating:
-
-
-# TODO after integration:
-# change all variable names that include home and away, including both variables in this file and instance variables
-# removing breaking checkbox in selectPlayersWindow
-# change window text from home and away player to breaking and incoming
-
 
 # variables
-homePlayer = '?'
-awayPlayer = '?'
+breakingPlayer = '?'
+incomingPlayer = '?'
 selectedBall = '?'
 selectedPocket = '?'
 currentGame = "??"
@@ -40,41 +30,26 @@ def moveToMenu():
 def moveToRecordStats():
 
     # checking that two players are not playing themselves
-    if selectPlayersWindow.homeComboBox.currentText() != selectPlayersWindow.awayComboBox.currentText():
+    if selectPlayersWindow.breakingPlayerComboBox.currentText() != selectPlayersWindow.incomingPlayerComboBox.currentText():
 
         # move to record stats window and update recordStatsWindow's instance variables
         windowStack.setCurrentIndex(2)
-        # TODO: home and away combo boxes will no longer exist, must change their variable names
-        recordStatsWindow.homePlayerLabel.setText(selectPlayersWindow.homeComboBox.currentText())
-        recordStatsWindow.awayPlayerLabel.setText(selectPlayersWindow.awayComboBox.currentText())
+        recordStatsWindow.breakingPlayerLabel.setText(selectPlayersWindow.breakingPlayerComboBox.currentText())
+        recordStatsWindow.incomingPlayerLabel.setText(selectPlayersWindow.incomingPlayerComboBox.currentText())
 
-        # START: remove after integration as breaking player will already be known
-        if selectPlayersWindow.breakCheckBox.isChecked():
-            breakingPlayer = 'home'
-            recordStatsWindow.homeTurn = True
-
-        else:
-            breakingPlayer = 'away'
-            recordStatsWindow.homeTurn = False
-            recordStatsWindow.shootingIcon.move(recordStatsWindow.shootingIconCoordinateDict['away'][0],
-                                                recordStatsWindow.shootingIconCoordinateDict['away'][1])
-        # END: remove after integration as breaking player will already be known
-
-        # TODO: change variable names as home and away players no longer exist
-        homePlayer = playerDict[selectPlayersWindow.homeComboBox.currentText()]
-        awayPlayer = playerDict[selectPlayersWindow.awayComboBox.currentText()]
-        recordStatsWindow.homePlayer = homePlayer
-        recordStatsWindow.awayPlayer = awayPlayer
+        breakingPlayer = playerDict[selectPlayersWindow.breakingPlayerComboBox.currentText()]
+        incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
+        recordStatsWindow.breakingPlayer = breakingPlayer
+        recordStatsWindow.incomingPlayer = incomingPlayer
+        # I don't know if this is necessary
         recordStatsWindow.breakingPlayer = breakingPlayer
 
         # creating a new object for the current game
-        # TODO: change variable names as home and away players no longer exist
         currentGame = Game()
         currentGame.gameNumber = len(gameList)
-        currentGame.home = homePlayer.name
-        currentGame.away = awayPlayer.name
+        currentGame.BP = breakingPlayer.playerName
+        currentGame.IP = incomingPlayer.playerName
         currentGame.date = date.today()
-        currentGame.broke = breakingPlayer
 
         # resetting the turn and sink logs for a new game:
         recordStatsWindow.turnLog = []
