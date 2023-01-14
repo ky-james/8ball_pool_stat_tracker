@@ -51,6 +51,12 @@ def moveToRecordStats():
         currentGame.IP = incomingPlayer.playerName
         currentGame.date = date.today()
 
+        # changing recordStatsWindow's currentGame instance variable
+        recordStatsWindow.currentGame = currentGame
+        recordStatsWindow.breakingPlayer = currentGame.BP
+        recordStatsWindow.incomingPlayer = currentGame.IP
+        recordStatsWindow.windowStack = windowStack
+
         # resetting the turn and sink logs for a new game:
         recordStatsWindow.turnLog = []
         recordStatsWindow.sinkLog = []
@@ -60,8 +66,8 @@ def moveToRecordStats():
                                           '15']
 
     else:
-        print("\nUnable to start a new game, two players are currently playing themselves.")
-        print("To start a game, please select two unique players.")
+        print("\n~~~~~UNABLE TO START GAME~~~~~")
+        print("\tPlease select two unique players")
 
 
 def moveToGameRecap():
@@ -70,6 +76,7 @@ def moveToGameRecap():
 
     # resetting the current game to none
     currentGame = "?"
+
 
 # reading data
 statSheetName = findNewestStatSheetName()
@@ -93,7 +100,7 @@ windowStack.addWidget(selectPlayersWindow)
 selectPlayersWindow.startGameButton.clicked.connect(moveToRecordStats)
 selectPlayersWindow.backButton.clicked.connect(moveToMenu)
 
-recordStatsWindow = RecordStatsWindow(windowStack)
+recordStatsWindow = RecordStatsWindow()
 windowStack.addWidget(recordStatsWindow)
 
 gameRecapWindow = GameRecapWindow()

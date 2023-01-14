@@ -6,12 +6,14 @@ from PyQt5.QtGui import QPixmap
 READ THIS FIRST!!!
 """
 
+
 class RecordStatsWindow(QMainWindow):
-    def __init__(self, stack):
+    def __init__(self):
         super().__init__()
 
         # window stack instance variable
-        self.windowStack = stack
+        self.currentGame = None
+        self.windowStack = None
 
         # game variables
         self.selectedBall = '?'
@@ -24,7 +26,7 @@ class RecordStatsWindow(QMainWindow):
         # TODO: change self.breakingPlayerTurn to true, as we always know the breaking player starts
         self.breakingPlayerTurn = '?'  # is changed to boolean in GUI_main.py
         self.sinkLog = []
-        self.currTurnLog =[]
+        self.currTurnLog = []
         self.turnLog = []
         self.turnNumber = 0
         # unsure if this is needed
@@ -55,6 +57,7 @@ class RecordStatsWindow(QMainWindow):
         self.setStyleSheet("background-color: rgb(0, 76, 153);")
 
         # title labels
+        # TODO: add a graphic to the screen which shows a player's ball type
         # title background
         self.titleBackgroundLabel = QLabel("", self)
         self.titleBackgroundLabel.resize(1200, 200)
@@ -89,13 +92,15 @@ class RecordStatsWindow(QMainWindow):
         # breaking player record
         self.breakingPlayerRecordLabel = QLabel("", self)
         self.breakingPlayerRecordLabel.resize(500, 75)
-        self.breakingPlayerRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.breakingPlayerRecordLabel.setStyleSheet(
+            "color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
         self.breakingPlayerRecordLabel.move(210, 130)
 
         # incoming player record
         self.incomingPlayerRecordLabel = QLabel("", self)
         self.incomingPlayerRecordLabel.resize(500, 75)
-        self.incomingPlayerRecordLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
+        self.incomingPlayerRecordLabel.setStyleSheet(
+            "color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
         self.incomingPlayerRecordLabel.move(880, 135)
 
         # shooting icon
@@ -616,7 +621,7 @@ class RecordStatsWindow(QMainWindow):
 
     def sinkBall(self, ball, pocket):
         # creating a tuple containing relevant data from the last sink
-        newestSinkEntry = (ball, pocket, self.bankShot, self.bridgeShot, self. behindTheBackShot, self.jumpShot)
+        newestSinkEntry = (ball, pocket, self.bankShot, self.bridgeShot, self.behindTheBackShot, self.jumpShot)
         self.currTurnLog.append(newestSinkEntry)
         self.sinkLog.append(newestSinkEntry)
 
@@ -634,19 +639,6 @@ class RecordStatsWindow(QMainWindow):
 
         # unsure if this is needed
         self.ballWasSunkThisTurn = True
-
-        # this was the first ball sunk outside the break, determining who's solids/stripes
-        if ball != 'cue' and self.turnNumber != 0:
-            if self.breakingPlayerTurn:
-                if ball in self.solidBalls:
-                    self.solids = 'breakingPlayer'
-                else:
-                    self.stripes = 'breakingPlayer'
-            else:
-                if ball in self.solidBalls:
-                    self.solids = 'incomingPlayer'
-                else:
-                    self.solids = 'incomingPlayer'
 
         # updating the sunk ball's graphics
         self.sinkBallGraphics(self.ballButtonDict[ball], pocket)
@@ -674,9 +666,6 @@ class RecordStatsWindow(QMainWindow):
         self.ballsOnTable.append(ball)
 
     def endTurn(self):
-        self.breakingPlayerTurn = not self.breakingPlayerTurn
-        self.turnNumber += 1
-
         gameOver = False
         if '8' not in self.ballsOnTable:
             gameOver = True
@@ -688,27 +677,79 @@ class RecordStatsWindow(QMainWindow):
         # self.sinkLog and self.currTurnLog are both completed, we must add it to self.turnLog now
         self.turnLog.append(self.currTurnLog)
 
+        # updating the game object's stats
+
+        # checking if the first ball was sunk, updating solids and stripes accordingly
+        # print(f"self.solids {self.solids}")
+        if len(self.ballsOnTable) != 15 and self.solids == '?':
+            # finding the first ball which was sunk
+            firstSink = self.sinkLog[0]
+            firstBallSunk = firstSink[0]
+
+            # it is the breaking player's turn, they are now the type which was first sunk
+            if self.breakingPlayerTurn:
+                if firstBallSunk in self.solidBalls:
+                    self.solids = self.breakingPlayer
+                    self.stripes = self.incomingPlayer
+
+                else:
+                    self.stripes = self.incomingPlayer
+                    self.solids = self.breakingPlayer
+
+            # it is the incoming player's turn, they are now the type which was first sunk
+            else:
+                if firstBallSunk in self.solidBalls:
+                    self.solids = self.incomingPlayer
+                    self.stripes = self.breakingPlayer
+
+                else:
+                    self.stripes = self.incomingPlayer
+                    self.solids = self.breakingPlayer
+
+            # updating the current game object's stats and printing an update
+            if self.solids == self.breakingPlayer:
+                # updating the current game object's stats
+                self.currentGame.BPBallGroup = "solids"
+                self.currentGame.IPBallGroup = "stripes"
+
+                # printing the updated ball types
+                print("\n~~~~~BALL TYPES DECLARED~~~~~")
+                print("Breaking player is solids and incoming player is stripes!")
+
+            else:
+                # updating the current game object's stats
+                self.currentGame.BPBallGroup = "stripes"
+                self.currentGame.IPBallGroup = "solids"
+
+                # printing the updated ball types
+                print("\n~~~~~BALL TYPES DECLARED~~~~~")
+                print("Breaking player is stripes and incoming player is solids!")
+
         # printing a recap to console of the logs, for testing purposes only
         print("\n~~~~~TURN ENDED~~~~~")
         print(f"Printing a recap of turn {self.turnNumber}")
-        print("The latest turn:")
+        if self.breakingPlayerTurn: print("The breaking player's latest turn:")
+        else: print("The incoming player's latest turn:")
         print(f"\t{self.currTurnLog}")
         print("The game's updated turn log:")
         print(f"\t{self.turnLog}")
 
-        # TODO: update the game object's stats of the latest turn
 
         # resetting self.currTurnLog now that the turn is over
         self.currTurnLog = []
 
-        for item in self.sinkLog:
-            if item[0] == 'cue':
-                self.returnBallGraphics(item[0])
+        for shot in self.sinkLog:
+            if shot[0] == 'cue':
+                self.returnBallGraphics(shot[0])
             else:
-                ball = self.ballButtonDict[item[0]]
+                ball = self.ballButtonDict[shot[0]]
                 ball.hide()
 
-        # shooting icon
+        # updating the turn
+        self.breakingPlayerTurn = not self.breakingPlayerTurn
+        self.turnNumber += 1
+
+        # updating the shooting icon
         if self.breakingPlayerTurn:
             self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
                                    self.shootingIconCoordinateDict['breakingPlayer'][1])
@@ -723,8 +764,14 @@ class RecordStatsWindow(QMainWindow):
             for ball in self.ballButtonDict.keys():
                 self.returnBallGraphics(ball)
 
+            # resetting the shooting icon
+            self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
+                                   self.shootingIconCoordinateDict['breakingPlayer'][1])
+
             self.windowStack.setCurrentIndex(3)
 
+        # resetting the selected ball
+        self.selectedBall = '?'
 
     def undoTurn(self):
         # removing the last turn from the logs
@@ -744,10 +791,26 @@ class RecordStatsWindow(QMainWindow):
                     # undoing the graphic for the sunk ball
                     self.returnBallGraphics(ballSunk[0])
 
+                # TODO: undoing the game object's stats of the latest miss
+                # checking if the move to undo was the first ball sunk
+                if len(self.sinkLog) == 1:
+                    # updating the window's instance variables
+                    self.solids = '?'
+                    self.stripes = '?'
+
+                    # updating the current game object's stats
+                    self.currentGame.solids = None
+                    self.currentGame.stripes = None
+
+                    # printing the update
+                    print("\n~~~~~BALL TYPES UNDECLARED~~~~~")
+                    print("The table is now open!")
+
                 # undoing the logs
                 self.sinkLog.pop()
                 self.turnLog.pop()
 
+                # printing the update
                 print("\n~~~~~TURN UNDONE~~~~~")
                 print(f"Printing a recap of turn {self.turnNumber}")
                 print("The latest turn:")
@@ -755,13 +818,12 @@ class RecordStatsWindow(QMainWindow):
                 print("The game's updated turn log:")
                 print(f"\t{self.turnLog}")
 
-                # TODO: undoing the game object's stats of the latest miss
-                pass
-
             # removing a miss
             else:
                 # undoing the logs of the latest miss
                 self.turnLog.pop()
+
+                # printing an update
                 print("\n~~~~~TURN UNDONE~~~~~")
                 print(f"Printing a recap of turn {self.turnNumber}")
                 print("The latest turn:")
@@ -777,7 +839,6 @@ class RecordStatsWindow(QMainWindow):
                 self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
                                        self.shootingIconCoordinateDict['breakingPlayer'][1])
                 self.breakingPlayerTurn = not self.breakingPlayerTurn
-
 
             else:
                 self.shootingIcon.move(self.shootingIconCoordinateDict['incomingPlayer'][0],
