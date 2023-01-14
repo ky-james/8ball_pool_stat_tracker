@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
 
+""""
+READ THIS FIRST!!!
+"""
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self, stack):
@@ -18,10 +21,13 @@ class RecordStatsWindow(QMainWindow):
         self.incomingPlayer = '?'
         self.solids = '?'
         self.stripes = '?'
+        # TODO: change self.breakingPlayerTurn to true, as we always know the breaking player starts
         self.breakingPlayerTurn = '?'  # is changed to boolean in GUI_main.py
         self.sinkLog = []
+        self.currTurnLog =[]
         self.turnLog = []
         self.turnNumber = 0
+        # unsure if this is needed
         self.ballWasSunkThisTurn = False
 
         self.openTable = True
@@ -40,7 +46,7 @@ class RecordStatsWindow(QMainWindow):
         self.turnLog = []
         self.jumpShot = False
         self.bankShot = False
-        self.aimbotShot = False
+        self.bridgeShot = False
         self.behindTheBackShot = False
 
         # window
@@ -66,7 +72,7 @@ class RecordStatsWindow(QMainWindow):
         self.incomingLabel = QLabel("Incoming Player", self)
         self.incomingLabel.resize(500, 75)
         self.incomingLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
-        self.incomingLabel.move(775, 20)
+        self.incomingLabel.move(710, 20)
 
         # break player label
         self.breakingPlayerLabel = QLabel("Kyle", self)
@@ -422,18 +428,18 @@ class RecordStatsWindow(QMainWindow):
         self.bankShotButton.resize(101, 49)
         self.bankShotButton.move(800, 475)
 
-        # aimbot
-        self.aimbotLabel = QLabel("Aimbot Shot", self)
-        self.aimbotLabel.resize(110, 50)
-        self.aimbotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.aimbotLabel.move(980, 520)
+        # bridge
+        self.bridgeLabel = QLabel("Bridge Shot", self)
+        self.bridgeLabel.resize(110, 50)
+        self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.bridgeLabel.move(980, 520)
 
-        self.aimbotButton = QPushButton('', self)
-        self.aimbotButton.setStyleSheet("background-color: transparent;")
-        self.aimbotButton.setIcon(QtGui.QIcon('images/aimbotIcon.png'))
-        self.aimbotButton.setIconSize(QtCore.QSize(218, 107))
-        self.aimbotButton.resize(168, 82)
-        self.aimbotButton.move(943, 455)
+        self.bridgeButton = QPushButton('', self)
+        self.bridgeButton.setStyleSheet("background-color: transparent;")
+        self.bridgeButton.setIcon(QtGui.QIcon('images/bridgeIcon.png'))
+        self.bridgeButton.setIconSize(QtCore.QSize(218, 107))
+        self.bridgeButton.resize(168, 82)
+        self.bridgeButton.move(943, 455)
 
         # behind the back
         self.behindTheBackLabel = QLabel("Behind the Back Shot", self)
@@ -452,7 +458,7 @@ class RecordStatsWindow(QMainWindow):
         # mapping buttons
         self.jumpShotButton.clicked.connect(self.toggleJumpShot)
         self.bankShotButton.clicked.connect(self.toggleBankShot)
-        self.aimbotButton.clicked.connect(self.toggleAimbotShot)
+        self.bridgeButton.clicked.connect(self.toggleBridgeShot)
         self.behindTheBackButton.clicked.connect(self.toggleBehindTheBackShot)
 
         self.ball1Button.clicked.connect(self.ball1Clicked)
@@ -504,14 +510,14 @@ class RecordStatsWindow(QMainWindow):
 
         self.bankShot = not self.bankShot
 
-    def toggleAimbotShot(self):
-        if self.aimbotShot:
-            self.aimbotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+    def toggleBridgeShot(self):
+        if self.bridgeShot:
+            self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
 
         else:
-            self.aimbotLabel.setStyleSheet("color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
+            self.bridgeLabel.setStyleSheet("color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
 
-        self.aimbotShot = not self.aimbotShot
+        self.bridgeShot = not self.bridgeShot
 
     def toggleBehindTheBackShot(self):
         if self.behindTheBackShot:
@@ -609,8 +615,24 @@ class RecordStatsWindow(QMainWindow):
             self.sinkBall(self.selectedBall, self.selectedPocket)
 
     def sinkBall(self, ball, pocket):
-        self.sinkLog.append((ball, pocket))
-        self.turnLog.append((ball, pocket))
+        # creating a tuple containing relevant data from the last sink
+        newestSinkEntry = (ball, pocket, self.bankShot, self.bridgeShot, self. behindTheBackShot, self.jumpShot)
+        self.currTurnLog.append(newestSinkEntry)
+        self.sinkLog.append(newestSinkEntry)
+
+        if self.bankShot:
+            self.toggleBankShot()
+
+        if self.jumpShot:
+            self.toggleJumpShot()
+
+        if self.behindTheBackShot:
+            self.toggleBehindTheBackShot()
+
+        if self.bridgeShot:
+            self.toggleBridgeShot()
+
+        # unsure if this is needed
         self.ballWasSunkThisTurn = True
 
         # this was the first ball sunk outside the break, determining who's solids/stripes
@@ -626,11 +648,14 @@ class RecordStatsWindow(QMainWindow):
                 else:
                     self.solids = 'incomingPlayer'
 
+        # updating the sunk ball's graphics
         self.sinkBallGraphics(self.ballButtonDict[ball], pocket)
-        self.selectedBall = '?'
-        self.selectedPocket = '?'
         if ball != 'cue':
             self.ballsOnTable.remove(ball)
+
+        # resetting instance variables for future use
+        self.selectedBall = '?'
+        self.selectedPocket = '?'
 
     def sinkBallGraphics(self, ball, pocket):
         ball.setIconSize(QtCore.QSize(25, 25))
@@ -652,6 +677,30 @@ class RecordStatsWindow(QMainWindow):
         self.breakingPlayerTurn = not self.breakingPlayerTurn
         self.turnNumber += 1
 
+        gameOver = False
+        if '8' not in self.ballsOnTable:
+            gameOver = True
+
+        # adding a miss if the game is not over
+        if not gameOver:
+            self.currTurnLog.append("miss")
+
+        # self.sinkLog and self.currTurnLog are both completed, we must add it to self.turnLog now
+        self.turnLog.append(self.currTurnLog)
+
+        # printing a recap to console of the logs, for testing purposes only
+        print("\n~~~~~TURN ENDED~~~~~")
+        print(f"Printing a recap of turn {self.turnNumber}")
+        print("The latest turn:")
+        print(f"\t{self.currTurnLog}")
+        print("The game's updated turn log:")
+        print(f"\t{self.turnLog}")
+
+        # TODO: update the game object's stats of the latest turn
+
+        # resetting self.currTurnLog now that the turn is over
+        self.currTurnLog = []
+
         for item in self.sinkLog:
             if item[0] == 'cue':
                 self.returnBallGraphics(item[0])
@@ -666,36 +715,13 @@ class RecordStatsWindow(QMainWindow):
         else:
             self.shootingIcon.move(self.shootingIconCoordinateDict['incomingPlayer'][0],
                                    self.shootingIconCoordinateDict['incomingPlayer'][1])
-        # shot options
-        if self.bankShot:
-            self.toggleBankShot()
 
-        if self.jumpShot:
-            self.toggleJumpShot()
-
-        if self.behindTheBackShot:
-            self.toggleBehindTheBackShot()
-
-        if self.aimbotShot:
-            self.toggleAimbotShot()
-
-        # updating the game logs if a ball was not sunk
-        if not self.ballWasSunkThisTurn:
-            self.turnLog.append("miss")
-        self.ballWasSunkThisTurn = False
-
-        # printing a turn recap to the console
-        print("\n End of the turn")
-        print(f"Turn log after this turn: {self.turnLog}")
-        print(f"Sink log after this turn: {self.sinkLog}")
-
-        # checking if the game is over
-        if '8' not in self.ballsOnTable:
+        # resetting the graphics and changing windows now that the game is over
+        if gameOver:
 
             # returning all the balls to the table
             for ball in self.ballButtonDict.keys():
                 self.returnBallGraphics(ball)
-
 
             self.windowStack.setCurrentIndex(3)
 
@@ -703,16 +729,64 @@ class RecordStatsWindow(QMainWindow):
     def undoTurn(self):
         # removing the last turn from the logs
         if len(self.turnLog) > 0:
+            moveToUndo = self.turnLog[-1]
+
             # removing a sink
-            if self.turnLog[-1] != "miss":
-                undoMove = self.sinkLog[-1]
-                undoBall = undoMove[0]
-                self.ballsOnTable.append(undoBall)
-                self.returnBallGraphics(undoBall)
-                self.turnLog.remove(self.sinkLog.pop())
-            # removing a miss
-            else:
+            if len(moveToUndo) != 1:
+
+                # undoing the graphics of the latest miss
+                ballsSunk = len(moveToUndo) - 1
+
+                # undoing each individual sink
+                for i in range(ballsSunk):
+                    ballSunk = moveToUndo[i]
+
+                    # undoing the graphic for the sunk ball
+                    self.returnBallGraphics(ballSunk[0])
+
+                # undoing the logs
+                self.sinkLog.pop()
                 self.turnLog.pop()
 
+                print("\n~~~~~TURN UNDONE~~~~~")
+                print(f"Printing a recap of turn {self.turnNumber}")
+                print("The latest turn:")
+                print(f"\t{self.currTurnLog}")
+                print("The game's updated turn log:")
+                print(f"\t{self.turnLog}")
+
+                # TODO: undoing the game object's stats of the latest miss
+                pass
+
+            # removing a miss
+            else:
+                # undoing the logs of the latest miss
+                self.turnLog.pop()
+                print("\n~~~~~TURN UNDONE~~~~~")
+                print(f"Printing a recap of turn {self.turnNumber}")
+                print("The latest turn:")
+                print(f"\t{self.currTurnLog}")
+                print("The game's updated turn log:")
+                print(f"\t{self.turnLog}")
+
+                # TODO: undoing the game object's stats of the latest miss
+                pass
+
+            # toggling the shooting icon
+            if not self.breakingPlayerTurn:
+                self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
+                                       self.shootingIconCoordinateDict['breakingPlayer'][1])
+                self.breakingPlayerTurn = not self.breakingPlayerTurn
+
+
+            else:
+                self.shootingIcon.move(self.shootingIconCoordinateDict['incomingPlayer'][0],
+                                       self.shootingIconCoordinateDict['incomingPlayer'][1])
+                self.breakingPlayerTurn = not self.breakingPlayerTurn
+
+            # updating the turn number
+            self.turnNumber -= 1
+
         else:
-            print("No moves in turn log to remove")
+            print("\n~~~~~UNABLE TO UNDO TURN~~~~~")
+            print("\tNo moves in turn log to remove")

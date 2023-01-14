@@ -66,6 +66,9 @@ def moveToRecordStats():
 
 def moveToGameRecap():
     windowStack.setCurrentIndex(3)
+    # TODO: write code to display the previously completed game to this window
+
+    # resetting the current game to none
     currentGame = "?"
 
 # reading data
@@ -96,9 +99,6 @@ windowStack.addWidget(recordStatsWindow)
 gameRecapWindow = GameRecapWindow()
 gameRecapWindow.returnToMenuButton.clicked.connect(moveToMenu)
 windowStack.addWidget(gameRecapWindow)
-
-# TODO: remove the line of code below
-# windowStack.setCurrentIndex(3)
 
 # start the app
 windowStack.show()
