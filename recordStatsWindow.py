@@ -2,10 +2,6 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
 
-""""
-READ THIS FIRST!!!
-"""
-
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self):
@@ -23,12 +19,11 @@ class RecordStatsWindow(QMainWindow):
         self.incomingPlayer = '?'
         self.solids = '?'
         self.stripes = '?'
-        # TODO: change self.breakingPlayerTurn to true, as we always know the breaking player starts
-        self.breakingPlayerTurn = '?'  # is changed to boolean in GUI_main.py
+        self.breakingPlayerTurn = True
         self.sinkLog = []
         self.currTurnLog = []
         self.turnLog = []
-        self.turnNumber = 0
+        self.turnNumber = 1
         # unsure if this is needed
         self.ballWasSunkThisTurn = False
 
@@ -44,6 +39,9 @@ class RecordStatsWindow(QMainWindow):
                                            '9': (150, 435), '10': (225, 435), '11': (300, 435), '12': (375, 435),
                                            '13': (450, 435), '14': (525, 435), '15': (600, 435), 'cue': (675, 435)}
         self.shootingIconCoordinateDict = {'breakingPlayer': (135, 115), 'incomingPlayer': (820, 115)}
+        self.BPPocketLetterDict = None
+        self.IPPocketLetterDict = None
+
 
         self.turnLog = []
         self.jumpShot = False
@@ -672,15 +670,450 @@ class RecordStatsWindow(QMainWindow):
 
         # adding a miss if the game is not over
         if not gameOver:
-            self.currTurnLog.append("miss")
+            # creating a tuple containing relevant data from the last shot
+            newestMissEntry = ("miss", self.bankShot, self.bridgeShot, self.behindTheBackShot, self.jumpShot)
+            self.currTurnLog.append(newestMissEntry)
+
+            # toggling off the type of shot buttons if clicked
+            if self.bankShot:
+                self.toggleBankShot()
+
+            if self.jumpShot:
+                self.toggleJumpShot()
+
+            if self.behindTheBackShot:
+                self.toggleBehindTheBackShot()
+
+            if self.bridgeShot:
+                self.toggleBridgeShot()
 
         # self.sinkLog and self.currTurnLog are both completed, we must add it to self.turnLog now
         self.turnLog.append(self.currTurnLog)
 
         # updating the game object's stats
+        # updating the stats for the first n-1 shots, where n is the number of shots the player took this turn
+        # note: that we know all of these shots must've been sinks
+        for i in range(len(self.currTurnLog) -1):
+            # pulling info from a sink
+            sink = self.currTurnLog[i]
+            ballSunk = sink[0]
+            pocket = sink[1]
+            bankShot = sink[2]
+            bridgeShot = sink[3]
+            behindTheBackShot = sink[4]
+            jumpShot = sink[5]
+
+            # the breaking player sunk the ball
+            if self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.BPShotsTaken += 1
+                self.currentGame.BPShotsMade += 1
+                self.BPPocketLetterDict[pocket] += 1
+
+                # updating the type of shot stats
+                if bankShot:
+                    self.currentGame.BPBankShotsTaken += 1
+                    self.currentGame.BPBankShotsMade += 1
+                if bridgeShot:
+                    self.currentGame.BPBridgeShotsTaken += 1
+                    self.currentGame.BPBridgeShotsMade += 1
+                if behindTheBackShot:
+                    self.currentGame.BPBehindTheBackShotsTaken += 1
+                    self.currentGame.BPBehindTheBackShotsMade += 1
+                if jumpShot:
+                    self.currentGame.BPJumpShotsTaken += 1
+                    self.currentGame.BPJumpShotsMade += 1
+
+                # updating 8-ball stats if applicable
+                if ballSunk == '8':
+                    self.currentGame.BPEightBallShotsTaken += 1
+                    self.currentGame.BPEightBallShotsMade += 1
+
+            # the incoming player sunk the ball
+            if not self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.IPShotsTaken += 1
+                self.currentGame.IPShotsMade += 1
+                self.IPPocketLetterDict[pocket] += 1
+
+                # updating the type of shot stats
+                if bankShot:
+                    self.currentGame.IPBankShotsTaken += 1
+                    self.currentGame.IPBankShotsMade += 1
+
+                if bridgeShot:
+                    self.currentGame.IPBridgeShotsTaken += 1
+                    self.currentGame.IPBridgeShotsMade += 1
+
+                if behindTheBackShot:
+                    self.currentGame.IPBehindTheBackShotsTaken += 1
+                    self.currentGame.IPBehindTheBackShotsTaken += 1
+
+                if jumpShot:
+                    self.currentGame.IPBehindTheBackShotsTaken += 1
+                    self.currentGame.IPBehindTheBackShotsMade += 1
+
+                if ballSunk == '8':
+                    self.currentGame.IPEightBallShotsTaken += 1
+                    self.currentGame.IPEightBallShotsMade += 1
+
+
+            else:
+                pass
+
+        # updating the stats for the last turn
+        # note: this shot will either be a miss, 8-ball sink or a scratch
+        lastTurn = self.currTurnLog[len(self.currTurnLog) -1]
+
+        # the shot was a miss
+        if lastTurn[0] == 'miss':
+            # variables from the latest miss
+            bankShot = lastTurn[1]
+            bridgeShot = lastTurn[2]
+            behindTheBackShot = lastTurn[3]
+            jumpShot = lastTurn[4]
+
+            # it was the breaking player's turn
+            if self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.BPShotsTaken += 1
+                self.currentGame.BPShotsMissed += 1
+
+                # updating the type of shot stats
+                # bank shot
+                if bankShot:
+                    self.currentGame.BPBankShotsTaken += 1
+                    self.currentGame.BPBankShotsMissed += 1
+
+                # bridge shots
+                if bridgeShot:
+                    self.currentGame.BPBridgeShotsTaken += 1
+                    self.currentGame.BPBridgeShotsMissed += 1
+
+                # behind the back shots
+                if behindTheBackShot:
+                    self.currentGame.BPBehindTheBackShotsTaken += 1
+                    self.currentGame.BPBehindTheBackShotsMissed += 1
+
+                # jump shot
+                if jumpShot:
+                    self.currentGame.BPJumpShotsTaken += 1
+                    self.currentGame.BPJumpShotsMissed += 1
+
+                # updating 8-ball stats if breaking player is on the 8-ball
+                breakingPlayerOnEightBall = True
+
+                # breaking player is solids
+                if self.breakingPlayer == self.solids:
+                    for ball in self.solids:
+                        if ball in self.ballsOnTable:
+                            breakingPlayerOnEightBall = False
+
+                    # updating 8-ball stats
+                    if breakingPlayerOnEightBall:
+                        self.currentGame.BPEightBallShotsTaken += 1
+                        self.currentGame.BPEightBallShotsMissed += 1
+
+                # breaking player is stripes
+                elif self.breakingPlayer == self.stripes:
+                    for ball in self.stripes:
+                        if ball in self.ballsOnTable:
+                            breakingPlayerOnEightBall = False
+
+                    # updating 8-ball stats
+                    if breakingPlayerOnEightBall:
+                        self.currentGame.BPEightBallShotsTaken += 1
+                        self.currentGame.BPEightBallShotsMissed += 1
+
+            # it was the incoming player's turn
+            if not self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.IPShotsTaken += 1
+                self.currentGame.IPShotsMissed += 1
+
+                # updating the type of shot stats
+                # bank shot
+                if bankShot:
+                    self.currentGame.IPBankShotsTaken += 1
+                    self.currentGame.IPBankShotsMissed += 1
+
+                # bridge shots
+                if bridgeShot:
+                    self.currentGame.IPBridgeShotsTaken += 1
+                    self.currentGame.IPBridgeShotsMissed += 1
+
+                # behind the back shots
+                if behindTheBackShot:
+                    self.currentGame.IPBehindTheBackShotsTaken += 1
+                    self.currentGame.IPBehindTheBackShotsMissed += 1
+
+                # jump shot
+                if jumpShot:
+                    self.currentGame.IPJumpShotsTaken += 1
+                    self.currentGame.IPJumpShotsMissed += 1
+
+                # updating 8-ball stats if incoming player is on the 8-ball
+                incomingPlayerOnEightBall = False
+
+                # incoming player is solids
+                if self.incomingPlayer == self.solids:
+                    for ball in self.solids:
+                        if ball in self.ballsOnTable:
+                            incomingPlayerOnEightBall = False
+
+                    # updating 8-ball stats
+                    if incomingPlayerOnEightBall:
+                        self.currentGame.IPEightBallShotsTaken += 1
+                        self.currentGame.IPEightBallShotsMissed += 1
+
+                # incoming player is stripes
+                elif self.incomingPlayer == self.stripes:
+                    for ball in self.stripes:
+                        if ball in self.ballsOnTable:
+                            incomingPlayerOnEightBall = False
+
+                    # updating 8-ball stats
+                    if incomingPlayerOnEightBall:
+                        self.currentGame.IPEightBallShotsTaken += 1
+                        self.currentGame.IPEightBallShotsMissed += 1
+
+
+
+        # the shot was a scratch
+        if lastTurn[0] == 'cue':
+            # variables from the latest scratch
+            bankShot = lastTurn[2]
+            bridgeShot = lastTurn[3]
+            behindTheBackShot = lastTurn[4]
+            jumpShot = lastTurn[5]
+
+            # it was the breaking player's turn
+            if self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.BPShotsTaken += 1
+                self.currentGame.BPShotsMissed += 1
+
+                # updating the type of shot stats
+                # bank shot
+                if bankShot:
+                    self.currentGame.BPBankShotsTaken += 1
+                    self.currentGame.BPBankShotsMissed += 1
+
+                # bridge shots
+                if bridgeShot:
+                    self.currentGame.BPBridgeShotsTaken += 1
+                    self.currentGame.BPBridgeShotsMissed += 1
+
+                # behind the back shots
+                if behindTheBackShot:
+                    self.currentGame.BPBehindTheBackShotsTaken += 1
+                    self.currentGame.BPBehindTheBackShotsMissed += 1
+
+                # jump shot
+                if jumpShot:
+                    self.currentGame.BPJumpShotsTaken += 1
+                    self.currentGame.BPJumpShotsMissed += 1
+
+                # updating the scratch stats
+                self.currentGame.BPScratchesMade += 1
+                self.currentGame.IPOpponentScratches += 1
+
+            # it was the incoming player's turn
+            if not self.breakingPlayerTurn:
+                # updating the overall stats
+                self.currentGame.IPShotsTaken += 1
+                self.currentGame.IPShotsMissed += 1
+
+                # updating the type of shot stats
+                # bank shot
+                if bankShot:
+                    self.currentGame.IPBankShotsTaken += 1
+                    self.currentGame.IPBankShotsMissed += 1
+
+                # bridge shots
+                if bridgeShot:
+                    self.currentGame.IPBridgeShotsTaken += 1
+                    self.currentGame.IPBridgeShotsMissed += 1
+
+                # behind the back shots
+                if behindTheBackShot:
+                    self.currentGame.IPBehindTheBackShotsTaken += 1
+                    self.currentGame.IPBehindTheBackShotsMissed += 1
+
+                # jump shot
+                if jumpShot:
+                    self.currentGame.IPJumpShotsTaken += 1
+                    self.currentGame.IPJumpShotsMissed += 1
+
+                # updating the scratch stats
+                self.currentGame.IPScratchesMade += 1
+                self.currentGame.BPOpponentScratches += 1
+
+        # the shot was an 8-ball sink
+        if lastTurn[0] == '8':
+            # variables from the latest 8-ball sink
+            bankShot = lastTurn[2]
+            bridgeShot = lastTurn[3]
+            behindTheBackShot = lastTurn[4]
+            jumpShot = lastTurn[5]
+
+            # breaking player's turn
+            if self.breakingPlayerTurn:
+                # determining if the breaking player won the game
+                breakingPlayerWon = True
+
+                # the breaking player is solids
+                if self.solids == self.breakingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.solids:
+                            breakingPlayerWon = False
+
+                # the breaking player is stripes
+                else:
+                    for ball in self.breakingPlayer:
+                        if ball in self.stripes:
+                            breakingPlayerWon = False
+
+                # the breaking player won the game
+                if breakingPlayerWon:
+                    # updating the overall stats
+                    self.currentGame.BPShotsTaken += 1
+                    self.currentGame.BPShotsMade += 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.BPBankShotsTaken += 1
+                        self.currentGame.BPBankShotsMade += 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.BPBridgeShotsTaken += 1
+                        self.currentGame.BPBridgeShotsMade += 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.BPBehindTheBackShotsTaken += 1
+                        self.currentGame.BPBehindTheBackShotsMade += 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.BPJumpShotsTaken += 1
+                        self.currentGame.BPJumpShotsMade += 1
+
+                    # updating the 8-ball stats
+                    self.currentGame.BPEightBallShotsTaken += 1
+                    self.currentGame.BPEightBallShotsMade += 1
+
+                # the breaking player lost the game
+                if not breakingPlayerWon:
+                    # updating the overall stats
+                    self.currentGame.BPShotsTaken += 1
+                    self.currentGame.BPShotsMissed += 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.BPBankShotsTaken += 1
+                        self.currentGame.BPBankShotsMissed += 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.BPBridgeShotsTaken += 1
+                        self.currentGame.BPBridgeShotsMissed += 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.BPBehindTheBackShotsTaken += 1
+                        self.currentGame.BPBehindTheBackShotsMissed += 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.BPJumpShotsTaken += 1
+                        self.currentGame.BPJumpShotsMissed += 1
+
+                    # updating the current game object's choke stats
+                    self.currentGame.gameWonByChoke = True
+
+            # incoming player's turn
+            if not self.breakingPlayerTurn:
+                # determining if the incoming player won the game
+                incomingPlayerWon = True
+
+                # the incoming player is solids
+                if self.solids == self.incomingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.solids:
+                            incomingPLayerWon = False
+
+                # the incoming player is stripes
+                else:
+                    for ball in self.incomingPlayer:
+                        if ball in self.stripes:
+                            incomingPLayerWon = False
+
+                # the incoming player won the game
+                if incomingPlayerWon:
+                    # updating the overall stats
+                    self.currentGame.IPShotsTaken += 1
+                    self.currentGame.IPShotsMade += 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.IPBankShotsTaken += 1
+                        self.currentGame.IPBankShotsMade += 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.IPBridgeShotsTaken += 1
+                        self.currentGame.IPBridgeShotsMade += 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.IPBehindTheBackShotsTaken += 1
+                        self.currentGame.IPBehindTheBackShotsMade += 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.IPJumpShotsTaken += 1
+                        self.currentGame.IPJumpShotsMade += 1
+
+                    # updating the 8-ball stats
+                    self.currentGame.BPEightBallShotsTaken += 1
+                    self.currentGame.BPEightBallShotsMade += 1
+
+                # the incoming player lost the game
+                if not incomingPlayerWon:
+                    # updating the overall stats
+                    self.currentGame.IPShotsTaken += 1
+                    self.currentGame.IPShotsMissed += 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.IPBankShotsTaken += 1
+                        self.currentGame.IPBankShotsMissed += 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.IPBridgeShotsTaken += 1
+                        self.currentGame.IPBridgeShotsMissed += 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.IPBehindTheBackShotsTaken += 1
+                        self.currentGame.IPBehindTheBackShotsMissed += 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.IPJumpShotsTaken += 1
+                        self.currentGame.IPJumpShotsMissed += 1
+
+                    # updating the current game object's choke stats
+                    self.currentGame.gameWonByChoke = True
 
         # checking if the first ball was sunk, updating solids and stripes accordingly
-        # print(f"self.solids {self.solids}")
         if len(self.ballsOnTable) != 15 and self.solids == '?':
             # finding the first ball which was sunk
             firstSink = self.sinkLog[0]
@@ -711,6 +1144,7 @@ class RecordStatsWindow(QMainWindow):
                 # updating the current game object's stats
                 self.currentGame.BPBallGroup = "solids"
                 self.currentGame.IPBallGroup = "stripes"
+                self.openTable = False
 
                 # printing the updated ball types
                 print("\n~~~~~BALL TYPES DECLARED~~~~~")
@@ -720,6 +1154,7 @@ class RecordStatsWindow(QMainWindow):
                 # updating the current game object's stats
                 self.currentGame.BPBallGroup = "stripes"
                 self.currentGame.IPBallGroup = "solids"
+                self.openTable = False
 
                 # printing the updated ball types
                 print("\n~~~~~BALL TYPES DECLARED~~~~~")
@@ -734,10 +1169,10 @@ class RecordStatsWindow(QMainWindow):
         print("The game's updated turn log:")
         print(f"\t{self.turnLog}")
 
-
         # resetting self.currTurnLog now that the turn is over
         self.currTurnLog = []
 
+        # putting the cue ball back on the table if sunk
         for shot in self.sinkLog:
             if shot[0] == 'cue':
                 self.returnBallGraphics(shot[0])
@@ -797,6 +1232,7 @@ class RecordStatsWindow(QMainWindow):
                     # updating the window's instance variables
                     self.solids = '?'
                     self.stripes = '?'
+                    self.openTable = True
 
                     # updating the current game object's stats
                     self.currentGame.solids = None
@@ -831,8 +1267,6 @@ class RecordStatsWindow(QMainWindow):
                 print("The game's updated turn log:")
                 print(f"\t{self.turnLog}")
 
-                # TODO: undoing the game object's stats of the latest miss
-                pass
 
             # toggling the shooting icon
             if not self.breakingPlayerTurn:

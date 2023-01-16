@@ -56,6 +56,18 @@ def moveToRecordStats():
         recordStatsWindow.breakingPlayer = currentGame.BP
         recordStatsWindow.incomingPlayer = currentGame.IP
         recordStatsWindow.windowStack = windowStack
+        recordStatsWindow.BPPocketLetterDict = {'A': currentGame.BPBallsSunkInPocketA,
+                                                'B': currentGame.BPBallsSunkInPocketB,
+                                                'C': currentGame.BPBallsSunkInPocketC,
+                                                'D': currentGame.BPBallsSunkInPocketD,
+                                                'E': currentGame.BPBallsSunkInPocketE,
+                                                'F': currentGame.BPBallsSunkInPocketF}
+        recordStatsWindow.IPPocketLetterDict = {'A': currentGame.IPBallsSunkInPocketA,
+                                                'B': currentGame.IPBallsSunkInPocketB,
+                                                'C': currentGame.IPBallsSunkInPocketC,
+                                                'D': currentGame.IPBallsSunkInPocketD,
+                                                'E': currentGame.IPBallsSunkInPocketE,
+                                                'F': currentGame.IPBallsSunkInPocketF}
 
         # resetting the turn and sink logs for a new game:
         recordStatsWindow.turnLog = []
