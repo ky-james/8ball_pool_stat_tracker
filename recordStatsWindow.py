@@ -13,6 +13,9 @@ class RecordStatsWindow(QMainWindow):
         self.currentGame = None
         self.windowStack = None
 
+        # game recap window instance variable
+        self.gameRecapWindow = None
+
         # game variables
         self.selectedBall = '?'
         self.selectedPocket = '?'
@@ -26,8 +29,6 @@ class RecordStatsWindow(QMainWindow):
         self.currTurnLog = []
         self.turnLog = []
         self.turnNumber = 1
-        # unsure if this is needed
-        self.ballWasSunkThisTurn = False
 
         self.openTable = True
         self.ballsOnTable = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
@@ -637,9 +638,6 @@ class RecordStatsWindow(QMainWindow):
         if self.bridgeShot:
             self.toggleBridgeShot()
 
-        # unsure if this is needed
-        self.ballWasSunkThisTurn = True
-
         # updating the sunk ball's graphics
         self.sinkBallGraphics(self.ballButtonDict[ball], pocket)
         if ball != 'cue':
@@ -669,6 +667,58 @@ class RecordStatsWindow(QMainWindow):
         gameOver = False
         if '8' not in self.ballsOnTable:
             gameOver = True
+
+            # updating who won the game
+
+            # the breaking player won the game
+            if not self.breakingPlayerTurn:
+                breakingPlayerWon = True
+
+                # breaking player was solids
+                if self.solids == self.breakingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.solids:
+                            breakingPlayerWon = False
+
+                # breaking player was stripes
+                elif self.stripes == self.breakingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.stripes:
+                            breakingPlayerWon = False
+
+                # updating the current game object's winner and loser
+                if breakingPlayerWon:
+                    self.currentGame.winner = self.breakingPlayer
+                    self.currentGame.loser = self.incomingPlayer
+
+                else:
+                    self.currentGame.winner = self.incomingPlayer
+                    self.currentGame.loser = self.breakingPlayer
+
+            # the incoming player won the game
+            elif self.breakingPlayerTurn:
+                incomingPlayerWon = True
+
+                # incoming player was solids
+                if self.solids == self.incomingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.solids:
+                            incomingPlayerWon = False
+
+                # incoming player was stripes
+                elif self.stripes == self.incomingPlayer:
+                    for ball in self.ballsOnTable:
+                        if ball in self.stripes:
+                            incomingPlayerWon = False
+
+                # updating the current game object's winner and loser
+                if incomingPlayerWon:
+                    self.currentGame.winner = self.incomingPlayer
+                    self.currentGame.loser = self.breakingPlayer
+
+                else:
+                    self.currentGame.winner = self.breakingPlayer
+                    self.currentGame.loser = self.incomingPlayer
 
         # adding a miss if the game is not over
         if not gameOver:
@@ -1198,6 +1248,122 @@ class RecordStatsWindow(QMainWindow):
             self.shootingIcon.move(self.shootingIconCoordinateDict['breakingPlayer'][0],
                                    self.shootingIconCoordinateDict['breakingPlayer'][1])
 
+            # update the game recap window's stats
+            print("\n~~~~~~GAME OVER~~~~~~")
+
+            # the breaking player is the winner
+            if self.currentGame.winner == self.breakingPlayer:
+                print("\tBreaking player won!")
+
+                # changing labels to reflect the latest game
+                # winner
+                self.gameRecapWindow.winnerNameLabel.setText(self.breakingPlayer)
+                self.gameRecapWindow.winnerBallsSunkLabel.setText(str(self.currentGame.BPShotsMade))
+                self.gameRecapWindow.winnerBallsInHandLabel.setText(str(self.currentGame.BPOpponentScratches))
+                self.gameRecapWindow.winnerScratchesLabel.setText(str(self.currentGame.BPScratchesMade))
+
+                # ensuring that shooting percentages do not divide by zero
+                # 8-ball shots were taken
+                if self.currentGame.BPEightBallShotsTaken != 0:
+                    self.gameRecapWindow.winnerEightBallShootingPercentageLabel.setText(
+                        str(int(
+                        100 * self.currentGame.BPEightBallShotsMade / self.currentGame.BPEightBallShotsTaken)) + "%")
+
+                # 8-ball shots were not taken
+                elif self.currentGame.BPEightBallShotsTaken == 0:
+                    self.gameRecapWindow.winnerEightBallShootingPercentageLabel.setText("N/A")
+
+                # shots were taken
+                if self.currentGame.BPShotsTaken != 0:
+                    self.gameRecapWindow.winnerShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.BPShotsMade / self.currentGame.BPShotsTaken)) + "%")
+
+                # shots were not taken
+                elif self.currentGame.BPShotsTaken == 0:
+                    self.gameRecapWindow.winnerShootingPercentageLabel.setText("N/A")
+
+                # loser
+                self.gameRecapWindow.loserNameLabel.setText(self.incomingPlayer)
+                self.gameRecapWindow.loserBallsSunkLabel.setText(str(self.currentGame.IPShotsMade))
+                self.gameRecapWindow.loserBallsInHandLabel.setText(str(self.currentGame.IPOpponentScratches))
+                self.gameRecapWindow.loserScratchesLabel.setText(str(self.currentGame.IPScratchesMade))
+
+                # ensuring that shooting percentages do not divide by zero
+                # 8-ball shots were taken
+                if self.currentGame.IPEightBallShotsTaken != 0:
+                    self.gameRecapWindow.loserEightBallShootingPercentageLabel.setText(
+                        str(int(
+                            100 * self.currentGame.IPEightBallShotsMade / self.currentGame.IPEightBallShotsTaken)) + "%")
+
+                # 8-ball shots were not taken
+                elif self.currentGame.IPEightBallShotsTaken == 0:
+                    self.gameRecapWindow.loserEightBallShootingPercentageLabel.setText("N/A")
+
+                # shots were taken
+                if self.currentGame.IPShotsTaken != 0:
+                    self.gameRecapWindow.loserShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.IPShotsMade / self.currentGame.IPShotsTaken)) + "%")
+
+                # shots were not taken
+                elif self.currentGame.IPShotsTaken == 0:
+                    self.gameRecapWindow.loserShootingPercentageLabel.setText("N/A")
+
+            # the incoming player is the winner
+            elif self.currentGame.winner == self.incomingPlayer:
+                print("\tIncoming player won!")
+
+                # changing the labels to reflect the latest game
+                # winner
+                self.gameRecapWindow.winnerNameLabel.setText(self.incomingPlayer)
+                self.gameRecapWindow.winnerBallsSunkLabel.setText(str(self.currentGame.IPShotsMade))
+                self.gameRecapWindow.winnerBallsInHandLabel.setText(str(self.currentGame.IPOpponentScratches))
+                self.gameRecapWindow.winnerScratchesLabel.setText(str(self.currentGame.IPScratchesMade))
+
+                # ensuring that shooting percentages do not divide by zero
+                # 8-ball shots were taken
+                if self.currentGame.IPEightBallShotsTaken != 0:
+                    self.gameRecapWindow.winnerEightBallShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.IPEightBallShotsMade / self.currentGame.IPEightBallShotsTaken)) + "%")
+
+                # 8-ball shots were not taken
+                elif self.currentGame.IPEightBallShotsTaken == 0:
+                    self.gameRecapWindow.winnerEightBallShootingPercentageLabel.setText("N/A")
+
+                # shots were taken
+                if self.currentGame.IPShotsTaken != 0:
+                    self.gameRecapWindow.winnerShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.IPShotsMade / self.currentGame.IPShotsTaken)) + "%")
+
+                # shots were not taken
+                elif self.currentGame.IPShotsTaken == 0:
+                    self.gameRecapWindow.winnerShootingPercentageLabel.setText("N/A")
+
+                # loser
+                self.gameRecapWindow.loserNameLabel.setText(self.breakingPlayer)
+                self.gameRecapWindow.loserBallsSunkLabel.setText(str(self.currentGame.BPShotsMade))
+                self.gameRecapWindow.loserBallsInHandLabel.setText(str(self.currentGame.BPOpponentScratches))
+                self.gameRecapWindow.loserScratchesLabel.setText(str(self.currentGame.BPScratchesMade))
+
+                # ensuring that shooting percentages do not divide by zero
+                # 8-ball shots were taken
+                if self.currentGame.BPEightBallShotsTaken != 0:
+                    self.gameRecapWindow.loserEightBallShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.BPEightBallShotsMade / self.currentGame.BPEightBallShotsTaken)) + "%")
+
+                # 8-ball shots were not taken
+                elif self.currentGame.BPEightBallShotsTaken == 0:
+                    self.gameRecapWindow.loserEightBallShootingPercentageLabel.setText("N/A")
+
+                # shots were taken
+                if self.currentGame.BPShotsTaken != 0:
+                    self.gameRecapWindow.loserShootingPercentageLabel.setText(
+                        str(int(100 * self.currentGame.BPShotsMade / self.currentGame.BPShotsTaken)) + "%")
+
+                # shots were not taken
+                elif self.currentGame.BPShotsTaken == 0:
+                    self.gameRecapWindow.loserShootingPercentageLabel.setText("N/A")
+
+            # move to the game recap window
             self.windowStack.setCurrentIndex(3)
 
         # resetting the selected ball

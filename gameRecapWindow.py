@@ -17,7 +17,7 @@ class GameRecapWindow(QMainWindow):
                                                 "font-size: 80px;")
         self.titleBackgroundLabel.move(0, 0)
 
-        # winner and looser titles
+        # winner and loser titles
         self.winnerTitleLabel = QLabel("Winner", self)
         self.winnerTitleLabel.resize(300, 100)
         self.winnerTitleLabel.setStyleSheet("color: rgb(0, 225, 0);"
@@ -25,27 +25,27 @@ class GameRecapWindow(QMainWindow):
                                             "font-size: 75px;")
         self.winnerTitleLabel.move(200, 0)
 
-        self.looserTitleLabel = QLabel("Looser", self)
-        self.looserTitleLabel.resize(300, 100)
-        self.looserTitleLabel.setStyleSheet("color: rgb(255, 0, 0);"
+        self.loserTitleLabel = QLabel("Loser", self)
+        self.loserTitleLabel.resize(300, 100)
+        self.loserTitleLabel.setStyleSheet("color: rgb(255, 0, 0);"
                                             "background-color: transparent;"
                                             "font-size: 75px;")
-        self.looserTitleLabel.move(800, 0)
+        self.loserTitleLabel.move(800, 0)
 
-        # winner and looser names
-        self.winnerNameLabel = QLabel("Kyle", self)
+        # winner and loser names
+        self.winnerNameLabel = QLabel("??", self)
         self.winnerNameLabel.resize(200, 100)
         self.winnerNameLabel.setStyleSheet("color: rgb(0, 76, 153);"
                                            "background-color: transparent;"
                                            "font-size: 40px;")
         self.winnerNameLabel.move(285, 75)
 
-        self.looserNameLabel = QLabel("Brady", self)
-        self.looserNameLabel.resize(200, 100)
-        self.looserNameLabel.setStyleSheet("color: rgb(0, 76, 153);"
+        self.loserNameLabel = QLabel("??", self)
+        self.loserNameLabel.resize(200, 100)
+        self.loserNameLabel.setStyleSheet("color: rgb(0, 76, 153);"
                                            "background-color: transparent;"
                                            "font-size: 40px;")
-        self.looserNameLabel.move(885, 75)
+        self.loserNameLabel.move(885, 75)
 
         # key stats labels
         # balls sunk
@@ -64,7 +64,7 @@ class GameRecapWindow(QMainWindow):
                                                            "font-size: 30px;")
         self.shootingPercentageKeyStatsLabel.move(490, 265)
 
-        # eight ball shooting percentage
+        # 8-ball shooting percentage
         self.eightBallShootingPercentageKeyStatsLabel = QLabel("8-Ball Shooting Percentage", self)
         self.eightBallShootingPercentageKeyStatsLabel.resize(360, 100)
         self.eightBallShootingPercentageKeyStatsLabel.setStyleSheet("color:white;"
@@ -97,14 +97,14 @@ class GameRecapWindow(QMainWindow):
         self.winnerBallsSunkLabel.move(200, 210)
 
         self.winnerShootingPercentageLabel = QLabel("??", self)
-        self.winnerShootingPercentageLabel.resize(75, 75)
+        self.winnerShootingPercentageLabel.resize(100, 75)
         self.winnerShootingPercentageLabel.setStyleSheet("color: white;"
                                                          "background-color: transparent;"
                                                          "font-size: 40px;")
         self.winnerShootingPercentageLabel.move(200, 275)
 
         self.winnerEightBallShootingPercentageLabel = QLabel("??", self)
-        self.winnerEightBallShootingPercentageLabel.resize(75, 75)
+        self.winnerEightBallShootingPercentageLabel.resize(100, 75)
         self.winnerEightBallShootingPercentageLabel.setStyleSheet("color: white;"
                                                                   "background-color: transparent;"
                                                                   "font-size: 40px;")
@@ -124,41 +124,41 @@ class GameRecapWindow(QMainWindow):
                                                 "font-size: 40px;")
         self.winnerScratchesLabel.move(200, 470)
 
-        # looser key stats
-        self.looserBallsSunkLabel = QLabel("??", self)
-        self.looserBallsSunkLabel.resize(75, 75)
-        self.looserBallsSunkLabel.setStyleSheet("color: white;"
+        # loser key stats
+        self.loserBallsSunkLabel = QLabel("??", self)
+        self.loserBallsSunkLabel.resize(75, 75)
+        self.loserBallsSunkLabel.setStyleSheet("color: white;"
                                                 "background-color: transparent;"
                                                 "font-size: 40px;")
-        self.looserBallsSunkLabel.move(975, 210)
+        self.loserBallsSunkLabel.move(975, 210)
 
-        self.looserShootingPercentageLabel = QLabel("??", self)
-        self.looserShootingPercentageLabel.resize(75, 75)
-        self.looserShootingPercentageLabel.setStyleSheet("color: white;"
+        self.loserShootingPercentageLabel = QLabel("??", self)
+        self.loserShootingPercentageLabel.resize(100, 75)
+        self.loserShootingPercentageLabel.setStyleSheet("color: white;"
                                                          "background-color: transparent;"
                                                          "font-size: 40px;")
-        self.looserShootingPercentageLabel.move(975, 275)
+        self.loserShootingPercentageLabel.move(975, 275)
 
-        self.looserEightBallShootingPercentageLabel = QLabel("??", self)
-        self.looserEightBallShootingPercentageLabel.resize(75, 75)
-        self.looserEightBallShootingPercentageLabel.setStyleSheet("color: white;"
+        self.loserEightBallShootingPercentageLabel = QLabel("??", self)
+        self.loserEightBallShootingPercentageLabel.resize(100, 75)
+        self.loserEightBallShootingPercentageLabel.setStyleSheet("color: white;"
                                                                   "background-color: transparent;"
                                                                   "font-size: 40px;")
-        self.looserEightBallShootingPercentageLabel.move(975, 340)
+        self.loserEightBallShootingPercentageLabel.move(975, 340)
 
-        self.looserBallsInHandLabel = QLabel("??", self)
-        self.looserBallsInHandLabel.resize(75, 75)
-        self.looserBallsInHandLabel.setStyleSheet("color: white;"
+        self.loserBallsInHandLabel = QLabel("??", self)
+        self.loserBallsInHandLabel.resize(75, 75)
+        self.loserBallsInHandLabel.setStyleSheet("color: white;"
                                                   "background-color: transparent;"
                                                   "font-size: 40px;")
-        self.looserBallsInHandLabel.move(975, 405)
+        self.loserBallsInHandLabel.move(975, 405)
 
-        self.looserScratchesLabel = QLabel("??", self)
-        self.looserScratchesLabel.resize(75, 75)
-        self.looserScratchesLabel.setStyleSheet("color: white;"
+        self.loserScratchesLabel = QLabel("??", self)
+        self.loserScratchesLabel.resize(75, 75)
+        self.loserScratchesLabel.setStyleSheet("color: white;"
                                                 "background-color: transparent;"
                                                 "font-size: 40px;")
-        self.looserScratchesLabel.move(975, 470)
+        self.loserScratchesLabel.move(975, 470)
 
         # return to menu button
         self.returnToMenuButton = QPushButton("Return to Menu", self)

@@ -41,6 +41,7 @@ def moveToRecordStats():
         incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
         recordStatsWindow.breakingPlayer = breakingPlayer
         recordStatsWindow.incomingPlayer = incomingPlayer
+        recordStatsWindow.gameRecapWindow = gameRecapWindow
         # I don't know if this is necessary
         recordStatsWindow.breakingPlayer = breakingPlayer
 
@@ -84,7 +85,6 @@ def moveToRecordStats():
 
 def moveToGameRecap():
     windowStack.setCurrentIndex(3)
-    # TODO: write code to display the previously completed game to this window
 
     # resetting the current game to none
     currentGame = "?"
