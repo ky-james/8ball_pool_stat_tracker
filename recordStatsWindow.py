@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
 
+# TODO: as of rn, you're unable to sink two balls into the same pocket - FIX
+
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self):
@@ -670,8 +672,40 @@ class RecordStatsWindow(QMainWindow):
 
         # adding a miss if the game is not over
         if not gameOver:
+            # finding out if the player was on the 8-ball at the time of the miss
+            playerWasOnEightBall = True
+
+            # breaking player missed
+            if self.breakingPlayerTurn:
+                # breaking player was solids
+                if self.breakingPlayer == self.solids:
+                    for ball in self.solids:
+                        if ball in self.ballsOnTable:
+                            playerWasOnEightBall = False
+
+                # breaking player was stripes
+                elif self.breakingPlayer == self.stripes:
+                    for ball in self.stripes:
+                        if ball in self.ballsOnTable:
+                            playerWasOnEightBall = False
+
+            # incoming player missed
+            elif not self.breakingPlayerTurn:
+                # incoming player was solids
+                if self.incomingPlayer == self.solids:
+                    for ball in self.solids:
+                        if ball in self.ballsOnTable:
+                            playerWasOnEightBall = False
+
+                # incoming player was stripes
+                elif self.incomingPlayer == self.stripes:
+                    for ball in self.stripes:
+                        if ball in self.ballsOnTable:
+                            playerWasOnEightBall = False
+
             # creating a tuple containing relevant data from the last shot
-            newestMissEntry = ("miss", self.bankShot, self.bridgeShot, self.behindTheBackShot, self.jumpShot)
+            newestMissEntry = ("miss", self.bankShot, self.bridgeShot, self.behindTheBackShot, self.jumpShot,
+                               playerWasOnEightBall)
             self.currTurnLog.append(newestMissEntry)
 
             # toggling off the type of shot buttons if clicked
@@ -761,7 +795,7 @@ class RecordStatsWindow(QMainWindow):
             else:
                 pass
 
-        # updating the stats for the last turn
+        # updating the stats for the last shot in the turn
         # note: this shot will either be a miss, 8-ball sink or a scratch
         lastTurn = self.currTurnLog[len(self.currTurnLog) -1]
 
@@ -772,8 +806,9 @@ class RecordStatsWindow(QMainWindow):
             bridgeShot = lastTurn[2]
             behindTheBackShot = lastTurn[3]
             jumpShot = lastTurn[4]
+            playerWasOnEightBall = lastTurn[5]
 
-            # it was the breaking player's turn
+            # the breaking player missed
             if self.breakingPlayerTurn:
                 # updating the overall stats
                 self.currentGame.BPShotsTaken += 1
@@ -801,29 +836,9 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.BPJumpShotsMissed += 1
 
                 # updating 8-ball stats if breaking player is on the 8-ball
-                breakingPlayerOnEightBall = True
-
-                # breaking player is solids
-                if self.breakingPlayer == self.solids:
-                    for ball in self.solids:
-                        if ball in self.ballsOnTable:
-                            breakingPlayerOnEightBall = False
-
-                    # updating 8-ball stats
-                    if breakingPlayerOnEightBall:
-                        self.currentGame.BPEightBallShotsTaken += 1
-                        self.currentGame.BPEightBallShotsMissed += 1
-
-                # breaking player is stripes
-                elif self.breakingPlayer == self.stripes:
-                    for ball in self.stripes:
-                        if ball in self.ballsOnTable:
-                            breakingPlayerOnEightBall = False
-
-                    # updating 8-ball stats
-                    if breakingPlayerOnEightBall:
-                        self.currentGame.BPEightBallShotsTaken += 1
-                        self.currentGame.BPEightBallShotsMissed += 1
+                if playerWasOnEightBall:
+                    self.currentGame.BPEightBallShotsTaken += 1
+                    self.currentGame.BPEightBallShotsMissed += 1
 
             # it was the incoming player's turn
             if not self.breakingPlayerTurn:
@@ -853,31 +868,9 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.IPJumpShotsMissed += 1
 
                 # updating 8-ball stats if incoming player is on the 8-ball
-                incomingPlayerOnEightBall = False
-
-                # incoming player is solids
-                if self.incomingPlayer == self.solids:
-                    for ball in self.solids:
-                        if ball in self.ballsOnTable:
-                            incomingPlayerOnEightBall = False
-
-                    # updating 8-ball stats
-                    if incomingPlayerOnEightBall:
-                        self.currentGame.IPEightBallShotsTaken += 1
-                        self.currentGame.IPEightBallShotsMissed += 1
-
-                # incoming player is stripes
-                elif self.incomingPlayer == self.stripes:
-                    for ball in self.stripes:
-                        if ball in self.ballsOnTable:
-                            incomingPlayerOnEightBall = False
-
-                    # updating 8-ball stats
-                    if incomingPlayerOnEightBall:
-                        self.currentGame.IPEightBallShotsTaken += 1
-                        self.currentGame.IPEightBallShotsMissed += 1
-
-
+                if playerWasOnEightBall:
+                    self.currentGame.IPEightBallShotsTaken += 1
+                    self.currentGame.IPEightBallShotsMissed += 1
 
         # the shot was a scratch
         if lastTurn[0] == 'cue':
@@ -1166,6 +1159,8 @@ class RecordStatsWindow(QMainWindow):
         if self.breakingPlayerTurn: print("The breaking player's latest turn:")
         else: print("The incoming player's latest turn:")
         print(f"\t{self.currTurnLog}")
+        print("The Game's updated sink log:")
+        print(f"\t{self.sinkLog}")
         print("The game's updated turn log:")
         print(f"\t{self.turnLog}")
 
@@ -1218,15 +1213,61 @@ class RecordStatsWindow(QMainWindow):
 
                 # undoing the graphics of the latest miss
                 ballsSunk = len(moveToUndo) - 1
-
-                # undoing each individual sink
                 for i in range(ballsSunk):
-                    ballSunk = moveToUndo[i]
+                    sink = moveToUndo[i]
+                    ballSunk = sink[0]
+                    pocket = sink[1]
+                    bankShot = sink[2]
+                    bridgeShot = sink[3]
+                    behindTheBackShot = sink[4]
+                    jumpShot = sink[5]
 
                     # undoing the graphic for the sunk ball
-                    self.returnBallGraphics(ballSunk[0])
+                    self.returnBallGraphics(ballSunk)
 
-                # TODO: undoing the game object's stats of the latest miss
+                    # updating the current game object's stats
+                    # if the breaking player sunk the ball
+                    if not self.breakingPlayerTurn:
+                        # updating the overall stats
+                        self.currentGame.BPShotsTaken -= 1
+                        self.currentGame.BPShotsMade -= 1
+                        self.BPPocketLetterDict[pocket] -= 1
+
+                        # updating the type of shot stats
+                        if bankShot:
+                            self.currentGame.BPBankShotsTaken -= 1
+                            self.currentGame.BPBankShotsMade -= 1
+                        if bridgeShot:
+                            self.currentGame.BPBridgeShotsTaken -= 1
+                            self.currentGame.BPBridgeShotsMade -= 1
+                        if behindTheBackShot:
+                            self.currentGame.BPBehindTheBackShotsTaken -= 1
+                            self.currentGame.BPBehindTheBackShotsMade -= 1
+                        if jumpShot:
+                            self.currentGame.BPJumpShotsTaken += 1
+                            self.currentGame.BPJumpShotsMade += 1
+
+                    # if the incoming player sunk the ball
+                    if self.breakingPlayerTurn:
+                        # updating the overall stats
+                        self.currentGame.IPShotsTaken -= 1
+                        self.currentGame.IPShotsMade -= 1
+                        self.IPPocketLetterDict[pocket] -= 1
+
+                        # updating the type of shot stats
+                        if bankShot:
+                            self.currentGame.IPBankShotsTaken -= 1
+                            self.currentGame.IPBankShotsMade -= 1
+                        if bridgeShot:
+                            self.currentGame.IPBridgeShotsTaken -= 1
+                            self.currentGame.IPBridgeShotsMade -= 1
+                        if behindTheBackShot:
+                            self.currentGame.IPBehindTheBackShotsTaken -= 1
+                            self.currentGame.IPBehindTheBackShotsMade -= 1
+                        if jumpShot:
+                            self.currentGame.IPJumpShotsTaken += 1
+                            self.currentGame.IPJumpShotsMade += 1
+
                 # checking if the move to undo was the first ball sunk
                 if len(self.sinkLog) == 1:
                     # updating the window's instance variables
@@ -1256,6 +1297,78 @@ class RecordStatsWindow(QMainWindow):
 
             # removing a miss
             else:
+                # updating the current game object's stats for this miss
+                miss = moveToUndo[-1]
+                bankShot = miss[1]
+                bridgeShot = miss[2]
+                behindTheBackShot = miss[3]
+                jumpShot = miss[4]
+                playerOnEightBall = miss[5]
+
+                # the breaking player missed
+                if not self.breakingPlayerTurn:
+                    # updating the overall stats
+                    self.currentGame.BPShotsTaken -= 1
+                    self.currentGame.BPShotsMissed -= 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.BPBankShotsTaken -= 1
+                        self.currentGame.BPBankShotsMissed -= 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.BPBridgeShotsTaken -= 1
+                        self.currentGame.BPBridgeShotsMissed -= 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.BPBehindTheBackShotsTaken -= 1
+                        self.currentGame.BPBehindTheBackShotsMissed -= 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.BPJumpShotsTaken -= 1
+                        self.currentGame.BPJumpShotsMissed -= 1
+
+                    # updating the 8-ball stats if this turn was on the 8-ball
+                    if playerOnEightBall:
+                        self.currentGame.BPEightBallShotsTaken -= 1
+                        self.currentGame.BPEightBallShotsMissed -= 1
+
+                # the incoming player missed
+                elif self.breakingPlayerTurn:
+                    # updating the overall stats
+                    self.currentGame.IPShotsTaken -= 1
+                    self.currentGame.IPShotsMissed -= 1
+
+                    # updating the type of shot stats
+                    # bank shot
+                    if bankShot:
+                        self.currentGame.IPBankShotsTaken -= 1
+                        self.currentGame.IPBankShotsMissed -= 1
+
+                    # bridge shots
+                    if bridgeShot:
+                        self.currentGame.IPBridgeShotsTaken -= 1
+                        self.currentGame.IPBridgeShotsMissed -= 1
+
+                    # behind the back shots
+                    if behindTheBackShot:
+                        self.currentGame.IPBehindTheBackShotsTaken -= 1
+                        self.currentGame.IPBehindTheBackShotsMissed -= 1
+
+                    # jump shot
+                    if jumpShot:
+                        self.currentGame.IPJumpShotsTaken -= 1
+                        self.currentGame.IPJumpShotsMissed -= 1
+
+                    # updating the 8-ball stats if this turn was on the 8-ball
+                    if playerOnEightBall:
+                        self.currentGame.IPEightBallShotsTaken -= 1
+                        self.currentGame.IPEightBallShotsMissed -= 1
+
                 # undoing the logs of the latest miss
                 self.turnLog.pop()
 
