@@ -3,6 +3,7 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
 
 # TODO: as of rn, you're unable to sink two balls into the same pocket - FIX
+# TODO: sinking an opponent's balls should not count for stats
 
 
 class RecordStatsWindow(QMainWindow):
@@ -647,6 +648,8 @@ class RecordStatsWindow(QMainWindow):
         self.selectedBall = '?'
         self.selectedPocket = '?'
 
+
+
     def sinkBallGraphics(self, ball, pocket):
         ball.setIconSize(QtCore.QSize(25, 25))
         ball.resize(25, 25)
@@ -669,9 +672,8 @@ class RecordStatsWindow(QMainWindow):
             gameOver = True
 
             # updating who won the game
-
             # the breaking player won the game
-            if not self.breakingPlayerTurn:
+            if self.breakingPlayerTurn:
                 breakingPlayerWon = True
 
                 # breaking player was solids
@@ -696,7 +698,7 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.loser = self.breakingPlayer
 
             # the incoming player won the game
-            elif self.breakingPlayerTurn:
+            elif not self.breakingPlayerTurn:
                 incomingPlayerWon = True
 
                 # incoming player was solids
@@ -720,13 +722,24 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.winner = self.breakingPlayer
                     self.currentGame.loser = self.incomingPlayer
 
+        # TODO: fix the below bug
+        """
+        As of right now, a miss is being added after every turn.
+        This is incorrect as misses should only be added if there were no sinks or the previous sink was the shooting 
+        player's ball
+        """
+
         # adding a miss if the game is not over
         if not gameOver:
             # finding out if the player was on the 8-ball at the time of the miss
             playerWasOnEightBall = True
 
-            # breaking player missed
-            if self.breakingPlayerTurn:
+            # the table was open, player was not on the 8-ball
+            if self.openTable:
+                playerWasOnEightBall = False
+
+            # it was the breaking player's turn
+            elif self.breakingPlayerTurn:
                 # breaking player was solids
                 if self.breakingPlayer == self.solids:
                     for ball in self.solids:
@@ -739,7 +752,7 @@ class RecordStatsWindow(QMainWindow):
                         if ball in self.ballsOnTable:
                             playerWasOnEightBall = False
 
-            # incoming player missed
+            # it was the incoming player's turn
             elif not self.breakingPlayerTurn:
                 # incoming player was solids
                 if self.incomingPlayer == self.solids:
@@ -776,11 +789,10 @@ class RecordStatsWindow(QMainWindow):
 
         # updating the game object's stats
         # updating the stats for the first n-1 shots, where n is the number of shots the player took this turn
-        # note: that we know all of these shots must've been sinks
-        for i in range(len(self.currTurnLog) -1):
+        # note: that we know all of these shots must've sunk a solid or striped ball
+        for i in range(len(self.currTurnLog) - 1):
             # pulling info from a sink
             sink = self.currTurnLog[i]
-            ballSunk = sink[0]
             pocket = sink[1]
             bankShot = sink[2]
             bridgeShot = sink[3]
@@ -798,20 +810,18 @@ class RecordStatsWindow(QMainWindow):
                 if bankShot:
                     self.currentGame.BPBankShotsTaken += 1
                     self.currentGame.BPBankShotsMade += 1
+
                 if bridgeShot:
                     self.currentGame.BPBridgeShotsTaken += 1
                     self.currentGame.BPBridgeShotsMade += 1
+
                 if behindTheBackShot:
                     self.currentGame.BPBehindTheBackShotsTaken += 1
                     self.currentGame.BPBehindTheBackShotsMade += 1
+
                 if jumpShot:
                     self.currentGame.BPJumpShotsTaken += 1
                     self.currentGame.BPJumpShotsMade += 1
-
-                # updating 8-ball stats if applicable
-                if ballSunk == '8':
-                    self.currentGame.BPEightBallShotsTaken += 1
-                    self.currentGame.BPEightBallShotsMade += 1
 
             # the incoming player sunk the ball
             if not self.breakingPlayerTurn:
@@ -837,17 +847,10 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.IPBehindTheBackShotsTaken += 1
                     self.currentGame.IPBehindTheBackShotsMade += 1
 
-                if ballSunk == '8':
-                    self.currentGame.IPEightBallShotsTaken += 1
-                    self.currentGame.IPEightBallShotsMade += 1
-
-
-            else:
-                pass
-
         # updating the stats for the last shot in the turn
         # note: this shot will either be a miss, 8-ball sink or a scratch
-        lastTurn = self.currTurnLog[len(self.currTurnLog) -1]
+        lastTurn = self.currTurnLog[- 1]
+        print(f"last turn: {lastTurn}")
 
         # the shot was a miss
         if lastTurn[0] == 'miss':
@@ -890,7 +893,7 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.BPEightBallShotsTaken += 1
                     self.currentGame.BPEightBallShotsMissed += 1
 
-            # it was the incoming player's turn
+            # the incoming player missed
             if not self.breakingPlayerTurn:
                 # updating the overall stats
                 self.currentGame.IPShotsTaken += 1
@@ -923,14 +926,14 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.IPEightBallShotsMissed += 1
 
         # the shot was a scratch
-        if lastTurn[0] == 'cue':
+        elif lastTurn[0] == 'cue':
             # variables from the latest scratch
             bankShot = lastTurn[2]
             bridgeShot = lastTurn[3]
             behindTheBackShot = lastTurn[4]
             jumpShot = lastTurn[5]
 
-            # it was the breaking player's turn
+            # the breaking player scratched
             if self.breakingPlayerTurn:
                 # updating the overall stats
                 self.currentGame.BPShotsTaken += 1
@@ -961,7 +964,7 @@ class RecordStatsWindow(QMainWindow):
                 self.currentGame.BPScratchesMade += 1
                 self.currentGame.IPOpponentScratches += 1
 
-            # it was the incoming player's turn
+            # the incoming player scratched
             if not self.breakingPlayerTurn:
                 # updating the overall stats
                 self.currentGame.IPShotsTaken += 1
@@ -993,14 +996,14 @@ class RecordStatsWindow(QMainWindow):
                 self.currentGame.BPOpponentScratches += 1
 
         # the shot was an 8-ball sink
-        if lastTurn[0] == '8':
+        elif lastTurn[0] == '8':
             # variables from the latest 8-ball sink
             bankShot = lastTurn[2]
             bridgeShot = lastTurn[3]
             behindTheBackShot = lastTurn[4]
             jumpShot = lastTurn[5]
 
-            # breaking player's turn
+            # the breaking player sunk the 8-ball
             if self.breakingPlayerTurn:
                 # determining if the breaking player won the game
                 breakingPlayerWon = True
@@ -1012,12 +1015,15 @@ class RecordStatsWindow(QMainWindow):
                             breakingPlayerWon = False
 
                 # the breaking player is stripes
-                else:
+                elif self.stripes == self.breakingPlayer:
                     for ball in self.breakingPlayer:
                         if ball in self.stripes:
                             breakingPlayerWon = False
 
-                # the breaking player won the game
+                elif self.openTable:
+                    breakingPlayerWon = False
+
+                # the breaking player won the game with the 8-ball sink
                 if breakingPlayerWon:
                     # updating the overall stats
                     self.currentGame.BPShotsTaken += 1
@@ -1048,7 +1054,7 @@ class RecordStatsWindow(QMainWindow):
                     self.currentGame.BPEightBallShotsTaken += 1
                     self.currentGame.BPEightBallShotsMade += 1
 
-                # the breaking player lost the game
+                # the breaking player lost the game with the 8-ball sink
                 if not breakingPlayerWon:
                     # updating the overall stats
                     self.currentGame.BPShotsTaken += 1
@@ -1078,7 +1084,7 @@ class RecordStatsWindow(QMainWindow):
                     # updating the current game object's choke stats
                     self.currentGame.gameWonByChoke = True
 
-            # incoming player's turn
+            # the incoming player sunk the 8-ball
             if not self.breakingPlayerTurn:
                 # determining if the incoming player won the game
                 incomingPlayerWon = True
@@ -1087,15 +1093,18 @@ class RecordStatsWindow(QMainWindow):
                 if self.solids == self.incomingPlayer:
                     for ball in self.ballsOnTable:
                         if ball in self.solids:
-                            incomingPLayerWon = False
+                            incomingPlayerWon = False
 
                 # the incoming player is stripes
-                else:
+                elif self.stripes == self.incomingPlayer:
                     for ball in self.incomingPlayer:
                         if ball in self.stripes:
-                            incomingPLayerWon = False
+                            incomingPlayerWon = False
 
-                # the incoming player won the game
+                elif self.openTable:
+                    incomingPlayerWon = False
+
+                # the incoming player won the game with the 8-ball sink
                 if incomingPlayerWon:
                     # updating the overall stats
                     self.currentGame.IPShotsTaken += 1
@@ -1123,10 +1132,10 @@ class RecordStatsWindow(QMainWindow):
                         self.currentGame.IPJumpShotsMade += 1
 
                     # updating the 8-ball stats
-                    self.currentGame.BPEightBallShotsTaken += 1
-                    self.currentGame.BPEightBallShotsMade += 1
+                    self.currentGame.IPEightBallShotsTaken += 1
+                    self.currentGame.IPEightBallShotsMade += 1
 
-                # the incoming player lost the game
+                # the incoming player lost the game with the 8-ball sink
                 if not incomingPlayerWon:
                     # updating the overall stats
                     self.currentGame.IPShotsTaken += 1
@@ -1156,54 +1165,6 @@ class RecordStatsWindow(QMainWindow):
                     # updating the current game object's choke stats
                     self.currentGame.gameWonByChoke = True
 
-        # checking if the first ball was sunk, updating solids and stripes accordingly
-        if len(self.ballsOnTable) != 15 and self.solids == '?':
-            # finding the first ball which was sunk
-            firstSink = self.sinkLog[0]
-            firstBallSunk = firstSink[0]
-
-            # it is the breaking player's turn, they are now the type which was first sunk
-            if self.breakingPlayerTurn:
-                if firstBallSunk in self.solidBalls:
-                    self.solids = self.breakingPlayer
-                    self.stripes = self.incomingPlayer
-
-                else:
-                    self.stripes = self.incomingPlayer
-                    self.solids = self.breakingPlayer
-
-            # it is the incoming player's turn, they are now the type which was first sunk
-            else:
-                if firstBallSunk in self.solidBalls:
-                    self.solids = self.incomingPlayer
-                    self.stripes = self.breakingPlayer
-
-                else:
-                    self.stripes = self.incomingPlayer
-                    self.solids = self.breakingPlayer
-
-            # updating the current game object's stats and printing an update
-            if self.solids == self.breakingPlayer:
-                # updating the current game object's stats
-                self.currentGame.BPBallGroup = "solids"
-                self.currentGame.IPBallGroup = "stripes"
-                self.openTable = False
-
-                # printing the updated ball types
-                print("\n~~~~~BALL TYPES DECLARED~~~~~")
-                print("Breaking player is solids and incoming player is stripes!")
-
-            else:
-                # updating the current game object's stats
-                self.currentGame.BPBallGroup = "stripes"
-                self.currentGame.IPBallGroup = "solids"
-                self.openTable = False
-
-                # printing the updated ball types
-                print("\n~~~~~BALL TYPES DECLARED~~~~~")
-                print("Breaking player is stripes and incoming player is solids!")
-
-        # printing a recap to console of the logs, for testing purposes only
         print("\n~~~~~TURN ENDED~~~~~")
         print(f"Printing a recap of turn {self.turnNumber}")
         if self.breakingPlayerTurn: print("The breaking player's latest turn:")
@@ -1545,7 +1506,6 @@ class RecordStatsWindow(QMainWindow):
                 print(f"\t{self.currTurnLog}")
                 print("The game's updated turn log:")
                 print(f"\t{self.turnLog}")
-
 
             # toggling the shooting icon
             if not self.breakingPlayerTurn:
