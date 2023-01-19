@@ -78,12 +78,10 @@ class Game:
         self.BPEightBallShotsTaken = 0
         self.BPEightBallShotsMade = 0
         self.BPEightBallShotsMissed = 0
-
         self.BPOpponentBallsSunk = 0
         self.BPBallsSunkByOpponent = 0
         self.BPScratchesMade = 0
         self.BPOpponentScratches = 0
-
         self.BPBallsSunkInPocketA = 0
         self.BPBallsSunkInPocketB = 0
         self.BPBallsSunkInPocketC = 0
