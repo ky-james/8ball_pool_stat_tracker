@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap
 
 # TODO: as of rn, you're unable to sink two balls into the same pocket - FIX
 # TODO: Add breaking implementation such as a visual indicator and breaking stats
-
+# TODO: fix 8-ball shooting stats. There's a bug rn that's adding too many misses. Unless the game recap window is wrong
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self):
@@ -45,7 +45,6 @@ class RecordStatsWindow(QMainWindow):
         self.shootingIconCoordinateDict = {'breakingPlayer': (135, 115), 'incomingPlayer': (820, 115)}
         self.BPPocketLetterDict = None
         self.IPPocketLetterDict = None
-
 
         self.turnLog = []
         self.jumpShot = False
@@ -112,6 +111,21 @@ class RecordStatsWindow(QMainWindow):
         self.shootingIcon.resize(64, 64)
         self.shootingIcon.setScaledContents(True)
         self.shootingIcon.move(135, 115)
+
+        # ball type icons
+        self.breakingPlayerBallTypeIcon = QLabel('', self)
+        self.breakingPlayerBallTypeIcon.setStyleSheet("background-color: transparent;")
+        self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
+        self.breakingPlayerBallTypeIcon.resize(64, 64)
+        self.breakingPlayerBallTypeIcon.setScaledContents(True)
+        self.breakingPlayerBallTypeIcon.move(300, 115)
+
+        self.incomingPlayerBallTypeIcon = QLabel('', self)
+        self.incomingPlayerBallTypeIcon.setStyleSheet("background-color: transparent;")
+        self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
+        self.incomingPlayerBallTypeIcon.resize(64, 64)
+        self.incomingPlayerBallTypeIcon.setScaledContents(True)
+        self.incomingPlayerBallTypeIcon.move(1000, 115)
 
         # versus label
         self.versusLabel = QLabel("vs", self)
@@ -711,6 +725,8 @@ class RecordStatsWindow(QMainWindow):
                     self.stripes = self.incomingPlayer
                     self.currentGame.solids = self.solids
                     self.currentGame.stripes = self.stripes
+                    self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/solids.png"))
+                    self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/stripes.png"))
 
                 # the ball was a stripe
                 elif ball in self.stripeBalls:
@@ -718,6 +734,8 @@ class RecordStatsWindow(QMainWindow):
                     self.solids = self.incomingPlayer
                     self.currentGame.solids = self.solids
                     self.currentGame.stripes = self.stripes
+                    self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/stripes.png"))
+                    self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/solids.png"))
 
             # incoming player sunk this ball
             elif not self.breakingPlayer:
@@ -727,6 +745,8 @@ class RecordStatsWindow(QMainWindow):
                     self.stripes = self.breakingPlayer
                     self.currentGame.solids = self.solids
                     self.currentGame.stripes = self.stripes
+                    self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/solids.png"))
+                    self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/stripes.png"))
 
                 # the ball was a stripe
                 elif ball in self.stripeBalls:
@@ -734,6 +754,8 @@ class RecordStatsWindow(QMainWindow):
                     self.solids = self.breakingPlayer
                     self.currentGame.solids = self.solids
                     self.currentGame.stripes = self.stripes
+                    self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/stripes.png"))
+                    self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/solids.png"))
 
             self.openTable = False
 
@@ -1666,6 +1688,8 @@ class RecordStatsWindow(QMainWindow):
                         # reverting the current game object's stats
                         self.currentGame.BPBallGroup = None
                         self.currentGame.IPBallGroup = None
+                        self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
+                        self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
 
                     # undoing the graphics for the sunk ball
                     self.returnBallGraphics(ball)
