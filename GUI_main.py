@@ -58,6 +58,19 @@ def moveToRecordStats():
         currentGame.IP = incomingPlayer.playerName
         currentGame.date = date.today()
 
+        breakingPlayer = playerDict[selectPlayersWindow.breakingPlayerComboBox.currentText()]
+        incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
+        recordStatsWindow.breakingPlayer = breakingPlayer
+        recordStatsWindow.incomingPlayer = incomingPlayer
+        recordStatsWindow.playerDict = playerDict
+        recordStatsWindow.gameRecapWindow = gameRecapWindow
+        recordStatsWindow.breakingPlayerRecordLabel.setText( "(" + str(playerDict[currentGame.BP].wins)
+                                                            + " - " + str(playerDict[currentGame.IP].losses) + ")")
+        recordStatsWindow.incomingPlayerRecordLabel.setText("(" + str(playerDict[currentGame.IP].wins)
+                                                            + " - " + str(playerDict[currentGame.IP].losses) + ")")
+        # I don't know if this is necessary
+        recordStatsWindow.breakingPlayer = breakingPlayer
+
         # changing recordStatsWindow's currentGame instance variable
         recordStatsWindow.currentGame = currentGame
         recordStatsWindow.breakingPlayer = currentGame.BP
@@ -103,6 +116,7 @@ App = QApplication(sys.argv)
 windowStack = QStackedWidget()
 windowStack.setFixedHeight(800)
 windowStack.setFixedWidth(1200)
+windowStack.setWindowTitle("Programmed with <3 by Kyle James")
 
 # initializing our windows, adding them to the stack, and mapping buttons
 menuWindow = MenuWindow()
@@ -120,6 +134,9 @@ windowStack.addWidget(recordStatsWindow)
 gameRecapWindow = GameRecapWindow()
 gameRecapWindow.returnToMenuButton.clicked.connect(moveToMenu)
 windowStack.addWidget(gameRecapWindow)
+
+# TODO: remove this code
+moveToRecordStats()
 
 # start the app
 windowStack.show()

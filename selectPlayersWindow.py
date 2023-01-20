@@ -23,19 +23,19 @@ class SelectPlayersWindow(QMainWindow):
         self.titleLabel.setStyleSheet("color: rgb(0, 76, 153);"
                                       "background-color: transparent;"
                                       "font-size: 100px;")
-        self.titleLabel.move(350, 0)
+        self.titleLabel.move(300, -5)
 
         # breaking player label
         self.breakingPlayerLabel = QLabel("Breaking Player", self)
         self.breakingPlayerLabel.resize(500, 75)
         self.breakingPlayerLabel.setStyleSheet("color: white; font-size: 40px;")
-        self.breakingPlayerLabel.move(135, 200)
+        self.breakingPlayerLabel.move(127, 200)
 
         # incoming player label
         self.incomingPlayerLabel = QLabel("Incoming Player", self)
         self.incomingPlayerLabel.resize(500, 75)
         self.incomingPlayerLabel.setStyleSheet("color: white; font-size: 40px;")
-        self.incomingPlayerLabel.move(820, 200)
+        self.incomingPlayerLabel.move(805, 200)
 
         # breaking player combo box
         self.breakingPlayerComboBox = QComboBox(self)
@@ -75,7 +75,7 @@ class SelectPlayersWindow(QMainWindow):
                                         "QComboBox QListView{"
                                         "border: 2px solid white;"
                                         "}")
-        self.incomingPlayerComboBox.move(850, 275)
+        self.incomingPlayerComboBox.move(840, 275)
 
         # filling combo boxes with player names
         for i in range(0, len(playerList)):
@@ -98,7 +98,7 @@ class SelectPlayersWindow(QMainWindow):
                                            "background-color: rgb(0, 76, 153);"
                                            "}"
                                            )
-        self.startGameButton.move(400, 400)
+        self.startGameButton.move(405, 380)
 
         # back pushbutton
         self.backButton = QPushButton("Back to Menu", self)
@@ -115,6 +115,6 @@ class SelectPlayersWindow(QMainWindow):
                                       "background-color: rgb(0, 76, 153);"
                                       "}"
                                       )
-        self.backButton.move(400, 550)
+        self.backButton.move(405, 575)
 
         self.show()

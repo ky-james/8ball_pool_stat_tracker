@@ -18,12 +18,12 @@ class MenuWindow(QMainWindow):
         self.titleBackgroundLabel.move(0, 0)
 
         # title label
-        self.titleLabel = QLabel("Garage Pool Stat Tracker", self)
+        self.titleLabel = QLabel("Pool Stat Tracker", self)
         self.titleLabel.resize(1200, 200)
         self.titleLabel.setStyleSheet("color: rgb(0, 76, 153);"
                                       "background-color: transparent;"
                                       "font-size: 100px;")
-        self.titleLabel.move(60, -20)
+        self.titleLabel.move(240, -25)
 
         # subheading
         self.subheadingLabel = QLabel("Track Your Stats As You Play!", self)
@@ -31,7 +31,7 @@ class MenuWindow(QMainWindow):
         self.subheadingLabel.setStyleSheet("color: rgb(0, 76, 153);"
                                            "background-color: transparent;"
                                            "font-size: 30px;")
-        self.subheadingLabel.move(400, 130)
+        self.subheadingLabel.move(415, 130)
 
         # new game pushbutton
         self.newGameButton = QPushButton("Start a New Game", self)
@@ -46,7 +46,7 @@ class MenuWindow(QMainWindow):
                                          "background-color: rgb(0, 76, 153);"
                                          "}"
                                          )
-        self.newGameButton.move(400, 300)
+        self.newGameButton.move(400, 325)
 
         # pool statistics button
         self.poolStatsButton = QPushButton("Pool Statistics", self)
@@ -61,7 +61,7 @@ class MenuWindow(QMainWindow):
                                            "background-color: rgb(0, 76, 153);"
                                            "}"
                                            )
-        self.poolStatsButton.move(400, 500)
+        self.poolStatsButton.move(400, 550)
 
         # show all the widgets
         self.show()

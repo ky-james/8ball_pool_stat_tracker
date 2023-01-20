@@ -3,6 +3,8 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
 from writing import writeGameStatsToPlayers
 
+# TODO: opponent balls are being said to be sunk after scratches
+
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self):
@@ -41,7 +43,7 @@ class RecordStatsWindow(QMainWindow):
                                            '5': (450, 360), '6': (525, 360), '7': (600, 360), '8': (675, 360),
                                            '9': (150, 435), '10': (225, 435), '11': (300, 435), '12': (375, 435),
                                            '13': (450, 435), '14': (525, 435), '15': (600, 435), 'cue': (675, 435)}
-        self.shootingIconCoordinateDict = {'breakingPlayer': (135, 115), 'incomingPlayer': (820, 115)}
+        self.shootingIconCoordinateDict = {'breakingPlayer': (210, 115), 'incomingPlayer': (805, 115)}
         self.BPPocketLetterDict = None
         self.IPPocketLetterDict = None
 
@@ -64,43 +66,53 @@ class RecordStatsWindow(QMainWindow):
                                                 "font-size: 80px;")
         self.titleBackgroundLabel.move(0, 0)
 
+        # footer background
+        self.footerBackgroundLabel = QLabel("", self)
+        self.footerBackgroundLabel.resize(1200, 200)
+        self.footerBackgroundLabel.setStyleSheet("background-color: white;"
+                                                "font-size: 80px;")
+        self.footerBackgroundLabel.move(0, 755)
+
+        # shot type background
+
+
         # breaking label
         self.breakingLabel = QLabel("Breaking Player", self)
         self.breakingLabel.resize(500, 75)
         self.breakingLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
-        self.breakingLabel.move(100, 20)
+        self.breakingLabel.move(105, 20)
 
         # incoming label
         self.incomingLabel = QLabel("Incoming Player", self)
         self.incomingLabel.resize(500, 75)
         self.incomingLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 60px; background-color: transparent;")
-        self.incomingLabel.move(710, 20)
+        self.incomingLabel.move(687, 20)
 
-        # break player label
+        # breaking player label
         self.breakingPlayerLabel = QLabel("Kyle", self)
         self.breakingPlayerLabel.resize(500, 75)
         self.breakingPlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.breakingPlayerLabel.move(210, 85)
+        self.breakingPlayerLabel.move(278, 85)
 
         # incoming player label
         self.incomingPlayerLabel = QLabel("Brady", self)
         self.incomingPlayerLabel.resize(500, 75)
         self.incomingPlayerLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.incomingPlayerLabel.move(880, 85)
+        self.incomingPlayerLabel.move(870, 85)
 
         # breaking player record
         self.breakingPlayerRecordLabel = QLabel("", self)
         self.breakingPlayerRecordLabel.resize(500, 75)
         self.breakingPlayerRecordLabel.setStyleSheet(
             "color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.breakingPlayerRecordLabel.move(210, 130)
+        self.breakingPlayerRecordLabel.move(270, 130)
 
         # incoming player record
         self.incomingPlayerRecordLabel = QLabel("", self)
         self.incomingPlayerRecordLabel.resize(500, 75)
         self.incomingPlayerRecordLabel.setStyleSheet(
             "color: rgb(0, 40, 80); font-size: 40px; background-color: transparent;")
-        self.incomingPlayerRecordLabel.move(880, 135)
+        self.incomingPlayerRecordLabel.move(865, 130)
 
         # shooting icon
         self.shootingIcon = QLabel('', self)
@@ -108,7 +120,8 @@ class RecordStatsWindow(QMainWindow):
         self.shootingIcon.setPixmap(QtGui.QPixmap("images/shootingIcon.png"))
         self.shootingIcon.resize(64, 64)
         self.shootingIcon.setScaledContents(True)
-        self.shootingIcon.move(135, 115)
+        self.shootingIcon.move(self.shootingIconCoordinateDict["breakingPlayer"][0],
+                               self.shootingIconCoordinateDict["breakingPlayer"][1])
 
         # ball type icons
         self.breakingPlayerBallTypeIcon = QLabel('', self)
@@ -116,20 +129,20 @@ class RecordStatsWindow(QMainWindow):
         self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
         self.breakingPlayerBallTypeIcon.resize(64, 64)
         self.breakingPlayerBallTypeIcon.setScaledContents(True)
-        self.breakingPlayerBallTypeIcon.move(300, 115)
+        self.breakingPlayerBallTypeIcon.move(395, 115)
 
         self.incomingPlayerBallTypeIcon = QLabel('', self)
         self.incomingPlayerBallTypeIcon.setStyleSheet("background-color: transparent;")
         self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
         self.incomingPlayerBallTypeIcon.resize(64, 64)
         self.incomingPlayerBallTypeIcon.setScaledContents(True)
-        self.incomingPlayerBallTypeIcon.move(1000, 115)
+        self.incomingPlayerBallTypeIcon.move(985, 115)
 
         # versus label
         self.versusLabel = QLabel("vs", self)
         self.versusLabel.resize(500, 75)
         self.versusLabel.setStyleSheet("color: rgb(0, 40, 80); font-size: 90px; background-color: transparent;")
-        self.versusLabel.move(560, 60)
+        self.versusLabel.move(552, 55)
 
         # table, pocket labels, undo turn, and end turn
         # table
@@ -154,7 +167,7 @@ class RecordStatsWindow(QMainWindow):
                                          "color: rgb(90, 255, 128);"
                                          "}"
                                          )
-        self.endTurnButton.move(490, 600)
+        self.endTurnButton.move(490, 630)
 
         # end turn button
         self.undoTurnButton = QPushButton("Undo Turn", self)
@@ -170,7 +183,7 @@ class RecordStatsWindow(QMainWindow):
                                           "color: rgb(255, 69, 40);"
                                           "}"
                                           )
-        self.undoTurnButton.move(183, 600)
+        self.undoTurnButton.move(183, 630)
 
         # pockets
         # pocket A
