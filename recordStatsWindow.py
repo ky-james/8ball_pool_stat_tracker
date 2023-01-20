@@ -52,6 +52,7 @@ class RecordStatsWindow(QMainWindow):
         self.bankShot = False
         self.bridgeShot = False
         self.behindTheBackShot = False
+        self.sunkOffBreak = False
 
         # window
         self.setGeometry(100, 0, 1200, 800)
@@ -74,7 +75,17 @@ class RecordStatsWindow(QMainWindow):
         self.footerBackgroundLabel.move(0, 755)
 
         # shot type background
-
+        self.footerBackgroundLabel = QLabel("", self)
+        self.footerBackgroundLabel.resize(383, 455)
+        self.footerBackgroundLabel.setStyleSheet("color: white; border-style: outset; border-width: 8px; "
+                                                 "background-color: white;"
+                                                 "border-radius: 20px;"
+                                                 "border-color: rgb(0, 40, 80);"
+                                                 "}"
+                                                 "QLabel:hover{"
+                                                 "border-color: rgb(0, 20, 80);"
+                                                 "}")
+        self.footerBackgroundLabel.move(790, 255)
 
         # breaking label
         self.breakingLabel = QLabel("Breaking Player", self)
@@ -164,7 +175,7 @@ class RecordStatsWindow(QMainWindow):
                                          "}"
                                          "QPushButton:hover{"
                                          "background-color: rgb(0, 76, 153);"
-                                         "color: rgb(90, 255, 128);"
+                                         "color: rgb(0, 135, 32);"
                                          "}"
                                          )
         self.endTurnButton.move(490, 630)
@@ -433,65 +444,81 @@ class RecordStatsWindow(QMainWindow):
         self.ballButtonDict['cue'] = self.cueBallButton
 
         # shot icons and labels
-
-        # jump shot
-        self.jumpShotLabel = QLabel("Jump Shot", self)
-        self.jumpShotLabel.resize(100, 50)
-        self.jumpShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.jumpShotLabel.move(800, 340)
-
-        self.jumpShotButton = QPushButton('', self)
-        self.jumpShotButton.setStyleSheet("background-color: transparent;")
-        self.jumpShotButton.setIcon(QtGui.QIcon('images/jumpShotIcon.png'))
-        self.jumpShotButton.setIconSize(QtCore.QSize(101, 49))
-        self.jumpShotButton.resize(101, 49)
-        self.jumpShotButton.move(800, 300)
-
         # bank shot
-        self.bankShotLabel = QLabel("Bank Shot", self)
-        self.bankShotLabel.resize(100, 50)
-        self.bankShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.bankShotLabel.move(805, 520)
-
         self.bankShotButton = QPushButton('', self)
         self.bankShotButton.setStyleSheet("background-color: transparent;")
         self.bankShotButton.setIcon(QtGui.QIcon('images/bankShotIcon.png'))
-        self.bankShotButton.setIconSize(QtCore.QSize(101, 49))
-        self.bankShotButton.resize(101, 49)
-        self.bankShotButton.move(800, 475)
+        self.bankShotButton.setIconSize(QtCore.QSize(130, 64))
+        self.bankShotButton.resize(130, 64)
+        self.bankShotButton.move(820, 285)
 
-        # bridge
-        self.bridgeLabel = QLabel("Bridge Shot", self)
-        self.bridgeLabel.resize(110, 50)
-        self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.bridgeLabel.move(980, 520)
-
-        self.bridgeButton = QPushButton('', self)
-        self.bridgeButton.setStyleSheet("background-color: transparent;")
-        self.bridgeButton.setIcon(QtGui.QIcon('images/bridgeIcon.png'))
-        self.bridgeButton.setIconSize(QtCore.QSize(218, 107))
-        self.bridgeButton.resize(168, 82)
-        self.bridgeButton.move(943, 455)
+        self.bankShotLabel = QLabel("Bank Shot", self)
+        self.bankShotLabel.resize(200, 50)
+        self.bankShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.bankShotLabel.move(840, 340)
 
         # behind the back
-        self.behindTheBackLabel = QLabel("Behind the Back Shot", self)
-        self.behindTheBackLabel.resize(200, 50)
-        self.behindTheBackLabel.setStyleSheet(
-            "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.behindTheBackLabel.move(945, 340)
-
         self.behindTheBackButton = QPushButton('', self)
         self.behindTheBackButton.setStyleSheet("background-color: transparent;")
         self.behindTheBackButton.setIcon(QtGui.QIcon('images/behindTheBackIcon.png'))
-        self.behindTheBackButton.setIconSize(QtCore.QSize(101, 49))
-        self.behindTheBackButton.resize(101, 49)
-        self.behindTheBackButton.move(980, 300)
+        self.behindTheBackButton.setIconSize(QtCore.QSize(130, 64))
+        self.behindTheBackButton.resize(130, 64)
+        self.behindTheBackButton.move(1025, 285)
+
+        self.behindTheBackLabel = QLabel("Behind the\nBack Shot", self)
+        self.behindTheBackLabel.resize(200, 50)
+        self.behindTheBackLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.behindTheBackLabel.move(1043, 350)
+
+        # bridge
+        self.bridgeButton = QPushButton('', self)
+        self.bridgeButton.setStyleSheet("background-color: transparent;")
+        self.bridgeButton.setIcon(QtGui.QIcon('images/bridgeIcon.png'))
+        self.bridgeButton.setIconSize(QtCore.QSize(130, 64))
+        self.bridgeButton.resize(130, 64)
+        self.bridgeButton.move(820, 445)
+
+        self.bridgeLabel = QLabel("Bridge Shot", self)
+        self.bridgeLabel.resize(110, 50)
+        self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.bridgeLabel.move(835, 500)
+
+        # jump shot
+        self.jumpShotButton = QPushButton('', self)
+        self.jumpShotButton.setStyleSheet("background-color: transparent;")
+        self.jumpShotButton.setIcon(QtGui.QIcon('images/jumpShotIcon.png'))
+        self.jumpShotButton.setIconSize(QtCore.QSize(130, 64))
+        self.jumpShotButton.resize(130, 64)
+        self.jumpShotButton.move(1020, 445)
+
+        self.jumpShotLabel = QLabel("Jump Shot", self)
+        self.jumpShotLabel.resize(100, 50)
+        self.jumpShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.jumpShotLabel.move(1035, 500)
+
+        # sunk off the break
+        self.sunkOffBreakLabel = QLabel("Sunk Off Break", self)
+        self.sunkOffBreakLabel.resize(200, 50)
+        self.sunkOffBreakLabel.setStyleSheet(
+            "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.sunkOffBreakLabel.move(820, 660)
+
+        self.sunkOffBreakButton = QPushButton('', self)
+        self.sunkOffBreakButton.setStyleSheet("background-color: transparent;")
+        self.sunkOffBreakButton.setIcon(QtGui.QIcon('images/sunkOffBreakIcon.png'))
+        self.sunkOffBreakButton.setIconSize(QtCore.QSize(130, 94))
+        self.sunkOffBreakButton.resize(130, 94)
+        self.sunkOffBreakButton.move(820, 580)
+
+
+
 
         # mapping buttons
         self.jumpShotButton.clicked.connect(self.toggleJumpShot)
         self.bankShotButton.clicked.connect(self.toggleBankShot)
         self.bridgeButton.clicked.connect(self.toggleBridgeShot)
         self.behindTheBackButton.clicked.connect(self.toggleBehindTheBackShot)
+        self.sunkOffBreakButton.clicked.connect(self.toggleSunkOffBreak)
 
         self.ball1Button.clicked.connect(self.ball1Clicked)
         self.ball2Button.clicked.connect(self.ball2Clicked)
@@ -528,7 +555,7 @@ class RecordStatsWindow(QMainWindow):
 
         else:
             self.jumpShotLabel.setStyleSheet(
-                "color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
+                "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
 
         self.jumpShot = not self.jumpShot
 
@@ -538,7 +565,7 @@ class RecordStatsWindow(QMainWindow):
 
         else:
             self.bankShotLabel.setStyleSheet(
-                "color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
+                "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
 
         self.bankShot = not self.bankShot
 
@@ -547,7 +574,7 @@ class RecordStatsWindow(QMainWindow):
             self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
 
         else:
-            self.bridgeLabel.setStyleSheet("color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
+            self.bridgeLabel.setStyleSheet("color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
 
         self.bridgeShot = not self.bridgeShot
 
@@ -558,9 +585,19 @@ class RecordStatsWindow(QMainWindow):
 
         else:
             self.behindTheBackLabel.setStyleSheet(
-                "color: rgb(90, 255, 128); font-size: 20px; background-color: transparent;")
+                "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
 
         self.behindTheBackShot = not self.behindTheBackShot
+
+    def toggleSunkOffBreak(self):
+        if self.breakingPlayerTurn:
+            if self.sunkOffBreak:
+                self.sunkOffBreakLabel.setStyleSheet(
+                    "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+            else:
+                self.sunkOffBreakLabel.setStyleSheet(
+                    "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
+            self.sunkOffBreak = not self.sunkOffBreak
 
     def ball1Clicked(self):
         self.selectedBall = '1'
@@ -694,6 +731,9 @@ class RecordStatsWindow(QMainWindow):
         if self.bridgeShot:
             self.toggleBridgeShot()
 
+        if self.sunkOffBreak:
+            self.toggleSunkOffBreak()
+
     def didPlayerSinkOwnBallType(self, ball):
         playerSunkOwnBallType = True
 
@@ -782,7 +822,7 @@ class RecordStatsWindow(QMainWindow):
 
         # creating a tuple containing relevant data from the last sink
         newestSinkEntry = (ball, pocket, self.bankShot, self.behindTheBackShot, self.bridgeShot, self.jumpShot,
-                           playerSunkOwnBallType, playerOnEightBall)
+                           playerSunkOwnBallType, playerOnEightBall, self.sunkOffBreak)
         self.currentTurnLog.append(newestSinkEntry)
         self.sinkLog.append(newestSinkEntry)
 
@@ -969,6 +1009,7 @@ class RecordStatsWindow(QMainWindow):
                 behindTheBackShot = sink[3]
                 bridgeShot = sink[4]
                 jumpShot = sink[5]
+                sunkOffBreak = sink[8]
 
                 # it was the breaking player's turn
                 if self.breakingPlayerTurn:
@@ -994,6 +1035,9 @@ class RecordStatsWindow(QMainWindow):
                     if jumpShot:
                         self.currentGame.BPJumpShotsTaken += 1
                         self.currentGame.BPJumpShotsMade += 1
+
+                    if sunkOffBreak:
+                        self.currentGame.ballsSunkOffBreak += 1
 
                 # it was the incoming player's turn
                 elif not self.breakingPlayerTurn:
@@ -1464,36 +1508,6 @@ class RecordStatsWindow(QMainWindow):
     def undoTurn(self):
         # there is a turn to undo
         if len(self.turnLog) > 0:
-            """
-            Brainstorming:
-            A for loop will be used to go over every shot that was taken that turn, in reverse order
-            Some remarks: 
-                1) we won't have to deal with 8-ball sinks as the game ends when the eight ball is sunk
-                2) we will have to check if undoing a sink reverts stripes/solids
-                3) when we check who sunk the ball, we'll use the opposite of self.breakingPlayerTurn
-            
-            Pseudo Code
-            For shot in current turn log (in reverse order):
-                If the shot is a miss
-                    undo the overall stats for the miss
-                    undo the 8-ball stats if applicable
-                
-                If the shot sinks a ball
-                    The player sunk their own ball
-                        undo the sink on the current game object
-                    
-                    The player sunk their opponent's ball or the cue ball
-                        undo the scratch on the current game object
-                        
-                        The ball was an opponent's 
-                            undo balls sunk by opponent stat
-                            
-                    Add the ball on the table again, if it wasn't the cue ball
-                    Take the shot off of the sink log
-            
-            Pop the last turn off the turn log
-            """
-
             # for loop iterating over ever shot in the latest turn, in reverse order
             turnToUndo = self.turnLog[-1]
             for i in range(1, len(turnToUndo) + 1):
@@ -1573,6 +1587,7 @@ class RecordStatsWindow(QMainWindow):
                     jumpShot = shotToUndo[5]
                     playerSunkOwnBallType = shotToUndo[6]
                     playerOnEightBall = shotToUndo[7]
+                    sunkOffBreak = shotToUndo[8]
 
                     # the player sunk their own ball
                     if playerSunkOwnBallType and ball != "cue":
@@ -1599,6 +1614,9 @@ class RecordStatsWindow(QMainWindow):
                             if jumpShot:
                                 self.currentGame.BPJumpShotsTaken -= 1
                                 self.currentGame.BPJumpShotsMade -= 1
+
+                            if sunkOffBreak:
+                                self.game.ballsSunkOffBreak -= 1
 
                         # it was the incoming player's sink
                         elif self.breakingPlayerTurn:

@@ -69,6 +69,7 @@ def writeGameStatsToPlayers(game, breakingPlayerObj, incomingPlayerObj):
     breakingPlayerObj.gamesPlayed += 1
     incomingPlayerObj.gamesPlayed += 1
     breakingPlayerObj.breaks += 1
+    breakingPlayerObj.ballsSunkOffBreak += game.ballsSunkOffBreak
 
     # updating winner and loser
     if game.winner == game.BP:
