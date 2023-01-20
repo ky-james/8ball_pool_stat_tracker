@@ -1,10 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QPixmap
+from writing import writeGameStatsToPlayers
 
-# TODO: as of rn, you're unable to sink two balls into the same pocket - FIX
-# TODO: Add breaking implementation such as a visual indicator and breaking stats
-# TODO: fix 8-ball shooting stats. There's a bug rn that's adding too many misses. Unless the game recap window is wrong
 
 class RecordStatsWindow(QMainWindow):
     def __init__(self):
@@ -21,6 +19,7 @@ class RecordStatsWindow(QMainWindow):
         self.selectedBall = '?'
         self.selectedPocket = '?'
 
+        self.playerDict = '?'
         self.breakingPlayer = '?'
         self.incomingPlayer = '?'
         self.solids = '?'
@@ -58,7 +57,6 @@ class RecordStatsWindow(QMainWindow):
         self.setStyleSheet("background-color: rgb(0, 76, 153);")
 
         # title labels
-        # TODO: add a graphic to the screen which shows a player's ball type
         # title background
         self.titleBackgroundLabel = QLabel("", self)
         self.titleBackgroundLabel.resize(1200, 200)
@@ -738,7 +736,7 @@ class RecordStatsWindow(QMainWindow):
                     self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/solids.png"))
 
             # incoming player sunk this ball
-            elif not self.breakingPlayer:
+            elif not self.breakingPlayerTurn:
                 # the ball was a solid
                 if ball in self.solidBalls:
                     self.solids = self.incomingPlayer
@@ -930,8 +928,17 @@ class RecordStatsWindow(QMainWindow):
                 self.gameRecapWindow.loserShootingPercentageLabel.setText("N/A")
 
         # resetting the selected ball
-
         self.selectedBall = '?'
+
+        # resetting solids/stripes variables
+        self.solids = '?'
+        self.stripes = '?'
+        self.breakingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/openTable.png"))
+        self.incomingPlayerBallTypeIcon.setPixmap(QtGui.QPixmap("images/sopenTable.png"))
+
+        # writing the game stats onto the players playing
+        writeGameStatsToPlayers(self.currentGame, self.playerDict[self.breakingPlayer],
+                                self.playerDict[self.incomingPlayer])
 
         # moving to the game recap window
         self.windowStack.setCurrentIndex(3)

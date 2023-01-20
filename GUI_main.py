@@ -3,32 +3,37 @@ from PyQt5.QtWidgets import *
 import sys
 from reading import findNewestStatSheetName
 from reading import parseData
-from writing import writeNewCSV
+from writing import writeNewCSV, writeGameStatsToPlayers
 from menuWindow import MenuWindow
 from selectPlayersWindow import SelectPlayersWindow
 from recordStatsWindow import RecordStatsWindow
 from gameRecapWindow import GameRecapWindow
 from objects import Game, Player
 
-
 # variables
 breakingPlayer = '?'
 incomingPlayer = '?'
 selectedBall = '?'
 selectedPocket = '?'
-currentGame = "??"
+currentGame = Game()
+
 
 # mapped buttons
 def moveToSelectPlayers():
     windowStack.setCurrentIndex(1)
 
 
-def moveToMenu():
+def moveToMenu(currentGame):
+    # writing a new csv
+    writeNewCSV(playerList, gameList)
+
+    currentGame = Game()
+
+    # moving to the menu window
     windowStack.setCurrentIndex(0)
 
 
 def moveToRecordStats():
-
     # checking that two players are not playing themselves
     if selectPlayersWindow.breakingPlayerComboBox.currentText() != selectPlayersWindow.incomingPlayerComboBox.currentText():
 
@@ -41,6 +46,7 @@ def moveToRecordStats():
         incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
         recordStatsWindow.breakingPlayer = breakingPlayer
         recordStatsWindow.incomingPlayer = incomingPlayer
+        recordStatsWindow.playerDict = playerDict
         recordStatsWindow.gameRecapWindow = gameRecapWindow
         # I don't know if this is necessary
         recordStatsWindow.breakingPlayer = breakingPlayer
@@ -85,10 +91,6 @@ def moveToRecordStats():
 
 def moveToGameRecap():
     windowStack.setCurrentIndex(3)
-
-    # resetting the current game to none
-    currentGame = "?"
-
 
 # reading data
 statSheetName = findNewestStatSheetName()

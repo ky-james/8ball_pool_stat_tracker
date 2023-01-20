@@ -4,25 +4,8 @@ from objects import Player, Game
 # Testing: completed
 # Integration: to be completed
 
+
 def findNewestStatSheetName():
-    """
-    :return: a string of the newest stat sheet's name
-    """
-
-    # This code below is a simplified re-write of the function
-    # unsure if this will work, so it'll need to be tested
-    """
-    statSheetList = os.listdir("stat_sheets")
-    newestStatSheetNum = 0
-    
-    for sheet in statSheetList:
-        if sheet[0].isnumeric():
-            if int(sheet[0]) > newestStatSheetNum:
-                newestStatSheetNum = int(sheet[0])
-    
-    return "stat_sheets/" + str(newestStatSheetNum) + "_stat_sheet.csv"
-    """
-
     statSheetList = os.listdir("stat_sheets")
     statSheetNum = 0
 
@@ -119,8 +102,8 @@ def parseData(statSheetName):
             gameObj.date = int(line[1])
             gameObj.BP = int(line[2])
             gameObj.IP = int(line[3])
-            gameObj.BPBallGroup = int(line[4])
-            gameObj.IPBallGroup = int(line[5])
+            gameObj.solids = int(line[4])
+            gameObj.stripes = int(line[5])
             gameObj.winner = int(line[6])
             gameObj.loser = int(line[7])
             gameObj.gameWonByChoke = int(line[8])

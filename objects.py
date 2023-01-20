@@ -52,8 +52,8 @@ class Game:
         self.date = None
         self.BP = None
         self.IP = None
-        self.BPBallGroup = None
-        self.IPBallGroup = None
+        self.solids = None
+        self.stripes = None
         self.winner = None
         self.loser = None
         self.gameWonByChoke = False # will be set to true if needed

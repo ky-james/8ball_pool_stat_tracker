@@ -16,7 +16,7 @@ playerHeaders = ["Player Name", "Games Played", "Wins", "Losses", "Stripes", "So
                  "Balls Sunk in Pocket A", "Balls Sunk in Pocket B", "Balls Sunk in Pocket C",
                  "Balls Sunk in Pocket D", "Balls Sunk in Pocket E", "Balls Sunk in Pocket F"]
 
-gameHeaders = ["Game Number", "Date", "BP", "IP", "BP Ball Group", "IP Ball Group", "Winner", "Loser",
+gameHeaders = ["Game Number", "Date", "BP", "IP", "Solids", "Stripes", "Winner", "Loser",
                "Game Won by Choke", "Balls Sunk off Break", "BP Shots Taken", "BP Shots Made", "BP Shots Missed",
                "BP Bank Shots Taken", "BP Bank Shots Made", "BP Bank Shots Missed", "BP Bridge Shots Taken",
                "BP Bridge Shots Made", "BP Bridge Shots Missed", "BP Behind the Back Shots Taken",
@@ -62,3 +62,91 @@ def writeNewCSV(playerList, gameList):
     shutil.move(newStatSheetName, "stat_sheets/")
 
     return newStatSheetName
+
+
+def writeGameStatsToPlayers(game, breakingPlayerObj, incomingPlayerObj):
+    # writing game stats
+    breakingPlayerObj.gamesPlayed += 1
+    incomingPlayerObj.gamesPlayed += 1
+    breakingPlayerObj.breaks += 1
+
+    # updating winner and loser
+    if game.winner == game.BP:
+        breakingPlayerObj.wins += 1
+        incomingPlayerObj.losses += 1
+        if game.gameWonByChoke:
+            breakingPlayerObj.winsByChoke += 1
+            incomingPlayerObj.lossesByChoke += 1
+    elif game.winner == game.IP:
+        incomingPlayerObj.wins += 1
+        breakingPlayerObj.losses += 1
+        if game.gameWonByChoke:
+            incomingPlayerObj.winsByChoke += 1
+            breakingPlayerObj.lossesByChoke += 1
+
+    # updating solids and stripes
+    if game.solids == game.BP:
+        breakingPlayerObj.solids += 1
+        incomingPlayerObj.stripes += 1
+    elif game.solids == game.IP:
+        incomingPlayerObj.solids += 1
+        breakingPlayerObj.stripes += 1
+
+    # updating breaking player stats
+    breakingPlayerObj.shotsTaken += game.BPShotsTaken
+    breakingPlayerObj.shotsMade += game.BPShotsMade
+    breakingPlayerObj.shotsMissed += game.BPShotsMissed
+    breakingPlayerObj.bankShotsTaken += game.BPBankShotsTaken
+    breakingPlayerObj.bankShotsMade += game.BPBankShotsMade
+    breakingPlayerObj.bankShotsMissed += game.BPBankShotsMissed
+    breakingPlayerObj.bridgeShotsTaken += game.BPBridgeShotsTaken
+    breakingPlayerObj.bridgeShotsMade += game.BPBridgeShotsMade
+    breakingPlayerObj.bridgeShotsMissed += game.BPBridgeShotsMissed
+    breakingPlayerObj.behindTheBackShotsTaken += game.BPBehindTheBackShotsTaken
+    breakingPlayerObj.behindTheBackShotsMade += game.BPBehindTheBackShotsMade
+    breakingPlayerObj.behindTheBackShotsMissed += game.BPBehindTheBackShotsMissed
+    breakingPlayerObj.jumpShotsTaken += game.BPJumpShotsTaken
+    breakingPlayerObj.jumpShotsMade += game.BPJumpShotsMade
+    breakingPlayerObj.jumpShotsMissed += game.BPJumpShotsMissed
+    breakingPlayerObj.eightBallShotsTaken += game.BPEightBallShotsTaken
+    breakingPlayerObj.eightBallShotsMade += game.BPEightBallShotsMade
+    breakingPlayerObj.eightBallShotsMissed += game.BPEightBallShotsMissed
+    breakingPlayerObj.opponentBallsSunk += game.BPOpponentBallsSunk
+    breakingPlayerObj.ballsSunkByOpponent += game.BPBallsSunkByOpponent
+    breakingPlayerObj.scratchesMade += game.BPScratchesMade
+    breakingPlayerObj.opponentScratches += game.BPOpponentScratches
+    breakingPlayerObj.ballsSunkInPocketA += game.BPBallsSunkInPocketA
+    breakingPlayerObj.ballsSunkInPocketB += game.BPBallsSunkInPocketB
+    breakingPlayerObj.ballsSunkInPocketC += game.BPBallsSunkInPocketC
+    breakingPlayerObj.ballsSunkInPocketD += game.BPBallsSunkInPocketD
+    breakingPlayerObj.ballsSunkInPocketE += game.BPBallsSunkInPocketE
+    breakingPlayerObj.ballsSunkInPocketF += game.BPBallsSunkInPocketF
+
+    incomingPlayerObj.shotsTaken += game.IPShotsTaken
+    incomingPlayerObj.shotsMade += game.IPShotsMade
+    incomingPlayerObj.shotsMissed += game.IPShotsMissed
+    incomingPlayerObj.bankShotsTaken += game.IPBankShotsTaken
+    incomingPlayerObj.bankShotsMade += game.IPBankShotsMade
+    incomingPlayerObj.bankShotsMissed += game.IPBankShotsMissed
+    incomingPlayerObj.bridgeShotsTaken += game.IPBridgeShotsTaken
+    incomingPlayerObj.bridgeShotsMade += game.IPBridgeShotsMade
+    incomingPlayerObj.bridgeShotsMissed += game.IPBridgeShotsMissed
+    incomingPlayerObj.behindTheBackShotsTaken += game.IPBehindTheBackShotsTaken
+    incomingPlayerObj.behindTheBackShotsMade += game.IPBehindTheBackShotsMade
+    incomingPlayerObj.behindTheBackShotsMissed += game.IPBehindTheBackShotsMissed
+    incomingPlayerObj.jumpShotsTaken += game.IPJumpShotsTaken
+    incomingPlayerObj.jumpShotsMade += game.IPJumpShotsMade
+    incomingPlayerObj.jumpShotsMissed += game.IPJumpShotsMissed
+    incomingPlayerObj.eightBallShotsTaken += game.IPEightBallShotsTaken
+    incomingPlayerObj.eightBallShotsMade += game.IPEightBallShotsMade
+    incomingPlayerObj.eightBallShotsMissed += game.IPEightBallShotsMissed
+    incomingPlayerObj.opponentBallsSunk += game.IPOpponentBallsSunk
+    incomingPlayerObj.ballsSunkByOpponent += game.IPBallsSunkByOpponent
+    incomingPlayerObj.scratchesMade += game.IPScratchesMade
+    incomingPlayerObj.opponentScratches += game.IPOpponentScratches
+    incomingPlayerObj.ballsSunkInPocketA += game.IPBallsSunkInPocketA
+    incomingPlayerObj.ballsSunkInPocketB += game.IPBallsSunkInPocketB
+    incomingPlayerObj.ballsSunkInPocketC += game.IPBallsSunkInPocketC
+    incomingPlayerObj.ballsSunkInPocketD += game.IPBallsSunkInPocketD
+    incomingPlayerObj.ballsSunkInPocketE += game.IPBallsSunkInPocketE
+    incomingPlayerObj.ballsSunkInPocketF += game.IPBallsSunkInPocketF
