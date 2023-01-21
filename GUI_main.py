@@ -39,11 +39,13 @@ def moveToRecordStats():
 
         # move to record stats window and update recordStatsWindow's instance variables
         windowStack.setCurrentIndex(2)
-        recordStatsWindow.breakingPlayerLabel.setText(selectPlayersWindow.breakingPlayerComboBox.currentText())
-        recordStatsWindow.incomingPlayerLabel.setText(selectPlayersWindow.incomingPlayerComboBox.currentText())
 
-        breakingPlayer = playerDict[selectPlayersWindow.breakingPlayerComboBox.currentText()]
-        incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
+        breakingPlayerName = selectPlayersWindow.breakingPlayerComboBox.currentText()[5:]
+        incomingPlayerName = selectPlayersWindow.incomingPlayerComboBox.currentText()[5:]
+        recordStatsWindow.breakingPlayerLabel.setText(breakingPlayerName)
+        recordStatsWindow.incomingPlayerLabel.setText(incomingPlayerName)
+        breakingPlayer = playerDict[breakingPlayerName]
+        incomingPlayer = playerDict[incomingPlayerName]
         recordStatsWindow.breakingPlayer = breakingPlayer
         recordStatsWindow.incomingPlayer = incomingPlayer
         recordStatsWindow.playerDict = playerDict
@@ -58,12 +60,6 @@ def moveToRecordStats():
         currentGame.IP = incomingPlayer.playerName
         currentGame.date = date.today()
 
-        breakingPlayer = playerDict[selectPlayersWindow.breakingPlayerComboBox.currentText()]
-        incomingPlayer = playerDict[selectPlayersWindow.incomingPlayerComboBox.currentText()]
-        recordStatsWindow.breakingPlayer = breakingPlayer
-        recordStatsWindow.incomingPlayer = incomingPlayer
-        recordStatsWindow.playerDict = playerDict
-        recordStatsWindow.gameRecapWindow = gameRecapWindow
         recordStatsWindow.breakingPlayerRecordLabel.setText( "(" + str(playerDict[currentGame.BP].wins)
                                                             + " - " + str(playerDict[currentGame.IP].losses) + ")")
         recordStatsWindow.incomingPlayerRecordLabel.setText("(" + str(playerDict[currentGame.IP].wins)
@@ -135,8 +131,6 @@ gameRecapWindow = GameRecapWindow()
 gameRecapWindow.returnToMenuButton.clicked.connect(moveToMenu)
 windowStack.addWidget(gameRecapWindow)
 
-# TODO: remove this code
-moveToRecordStats()
 
 # start the app
 windowStack.show()

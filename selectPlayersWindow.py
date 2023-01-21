@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
 
 class SelectPlayersWindow(QMainWindow):
@@ -79,8 +80,11 @@ class SelectPlayersWindow(QMainWindow):
 
         # filling combo boxes with player names
         for i in range(0, len(playerList)):
-            self.breakingPlayerComboBox.addItem(playerList[i].playerName)
-            self.incomingPlayerComboBox.addItem(playerList[i].playerName)
+            self.breakingPlayerComboBox.addItem("     " + playerList[i].playerName)
+            self.incomingPlayerComboBox.addItem("     " + playerList[i].playerName)
+
+        # centring the text in the combo boxes
+
 
         # initializing incomingPlayerComboBox to be set at a different player than breakingPlayer's player
         self.incomingPlayerComboBox.setCurrentIndex(1)

@@ -53,6 +53,7 @@ class RecordStatsWindow(QMainWindow):
         self.bridgeShot = False
         self.behindTheBackShot = False
         self.sunkOffBreak = False
+        self.unintentionalShot = False
 
         # window
         self.setGeometry(100, 0, 1200, 800)
@@ -445,6 +446,11 @@ class RecordStatsWindow(QMainWindow):
 
         # shot icons and labels
         # bank shot
+        self.bankShotLabel = QLabel("Bank Shot", self)
+        self.bankShotLabel.resize(200, 50)
+        self.bankShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.bankShotLabel.move(840, 340)
+
         self.bankShotButton = QPushButton('', self)
         self.bankShotButton.setStyleSheet("background-color: transparent;")
         self.bankShotButton.setIcon(QtGui.QIcon('images/bankShotIcon.png'))
@@ -452,12 +458,13 @@ class RecordStatsWindow(QMainWindow):
         self.bankShotButton.resize(130, 64)
         self.bankShotButton.move(820, 285)
 
-        self.bankShotLabel = QLabel("Bank Shot", self)
-        self.bankShotLabel.resize(200, 50)
-        self.bankShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.bankShotLabel.move(840, 340)
-
         # behind the back
+        self.behindTheBackLabel = QLabel("Behind the\nBack Shot", self)
+        self.behindTheBackLabel.resize(200, 50)
+        self.behindTheBackLabel.setStyleSheet(
+            "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.behindTheBackLabel.move(1043, 350)
+
         self.behindTheBackButton = QPushButton('', self)
         self.behindTheBackButton.setStyleSheet("background-color: transparent;")
         self.behindTheBackButton.setIcon(QtGui.QIcon('images/behindTheBackIcon.png'))
@@ -465,53 +472,59 @@ class RecordStatsWindow(QMainWindow):
         self.behindTheBackButton.resize(130, 64)
         self.behindTheBackButton.move(1025, 285)
 
-        self.behindTheBackLabel = QLabel("Behind the\nBack Shot", self)
-        self.behindTheBackLabel.resize(200, 50)
-        self.behindTheBackLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.behindTheBackLabel.move(1043, 350)
-
         # bridge
+        self.bridgeLabel = QLabel("Bridge Shot", self)
+        self.bridgeLabel.resize(110, 50)
+        self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.bridgeLabel.move(835, 485)
+
         self.bridgeButton = QPushButton('', self)
         self.bridgeButton.setStyleSheet("background-color: transparent;")
         self.bridgeButton.setIcon(QtGui.QIcon('images/bridgeIcon.png'))
         self.bridgeButton.setIconSize(QtCore.QSize(130, 64))
         self.bridgeButton.resize(130, 64)
-        self.bridgeButton.move(820, 445)
-
-        self.bridgeLabel = QLabel("Bridge Shot", self)
-        self.bridgeLabel.resize(110, 50)
-        self.bridgeLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.bridgeLabel.move(835, 500)
+        self.bridgeButton.move(820, 430)
 
         # jump shot
+        self.jumpShotLabel = QLabel("Jump Shot", self)
+        self.jumpShotLabel.resize(100, 50)
+        self.jumpShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.jumpShotLabel.move(1035, 485)
+
         self.jumpShotButton = QPushButton('', self)
         self.jumpShotButton.setStyleSheet("background-color: transparent;")
         self.jumpShotButton.setIcon(QtGui.QIcon('images/jumpShotIcon.png'))
         self.jumpShotButton.setIconSize(QtCore.QSize(130, 64))
         self.jumpShotButton.resize(130, 64)
-        self.jumpShotButton.move(1020, 445)
-
-        self.jumpShotLabel = QLabel("Jump Shot", self)
-        self.jumpShotLabel.resize(100, 50)
-        self.jumpShotLabel.setStyleSheet("color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.jumpShotLabel.move(1035, 500)
+        self.jumpShotButton.move(1020, 430)
 
         # sunk off the break
         self.sunkOffBreakLabel = QLabel("Sunk Off Break", self)
         self.sunkOffBreakLabel.resize(200, 50)
         self.sunkOffBreakLabel.setStyleSheet(
             "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
-        self.sunkOffBreakLabel.move(820, 660)
+        self.sunkOffBreakLabel.move(820, 645)
 
         self.sunkOffBreakButton = QPushButton('', self)
         self.sunkOffBreakButton.setStyleSheet("background-color: transparent;")
         self.sunkOffBreakButton.setIcon(QtGui.QIcon('images/sunkOffBreakIcon.png'))
         self.sunkOffBreakButton.setIconSize(QtCore.QSize(130, 94))
         self.sunkOffBreakButton.resize(130, 94)
-        self.sunkOffBreakButton.move(820, 580)
+        self.sunkOffBreakButton.move(820, 555)
 
+        # unintentional shot
+        self.unintentionalShotLabel = QLabel("Unintentional\n        Shot", self)
+        self.unintentionalShotLabel.resize(200, 50)
+        self.unintentionalShotLabel.setStyleSheet(
+            "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+        self.unintentionalShotLabel.move(1027, 650)
 
-
+        self.unintentionalShotButton = QPushButton("", self)
+        self.unintentionalShotButton.setStyleSheet("background-color: transparent;")
+        self.unintentionalShotButton.setIcon(QtGui.QIcon('images/unintentionalShotRed.png'))
+        self.unintentionalShotButton.setIconSize(QtCore.QSize(130, 94))
+        self.unintentionalShotButton.resize(130, 94)
+        self.unintentionalShotButton.move(1020, 555)
 
         # mapping buttons
         self.jumpShotButton.clicked.connect(self.toggleJumpShot)
@@ -519,6 +532,7 @@ class RecordStatsWindow(QMainWindow):
         self.bridgeButton.clicked.connect(self.toggleBridgeShot)
         self.behindTheBackButton.clicked.connect(self.toggleBehindTheBackShot)
         self.sunkOffBreakButton.clicked.connect(self.toggleSunkOffBreak)
+        self.unintentionalShotButton.clicked.connect(self.toggleUnintentionalShot)
 
         self.ball1Button.clicked.connect(self.ball1Clicked)
         self.ball2Button.clicked.connect(self.ball2Clicked)
@@ -597,7 +611,19 @@ class RecordStatsWindow(QMainWindow):
             else:
                 self.sunkOffBreakLabel.setStyleSheet(
                     "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
-            self.sunkOffBreak = not self.sunkOffBreak
+        self.sunkOffBreak = not self.sunkOffBreak
+
+    def toggleUnintentionalShot(self):
+        if self.unintentionalShot:
+            self.unintentionalShotLabel.setStyleSheet(
+                "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
+            self.unintentionalShotButton.setIcon(QtGui.QIcon('images/unintentionalShotRed.png'))
+        else:
+            self.unintentionalShotLabel.setStyleSheet(
+                "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
+            self.unintentionalShotButton.setIcon(QtGui.QIcon('images/unintentionalShotGreen.png'))
+        self.unintentionalShot = not self.unintentionalShot
+
 
     def ball1Clicked(self):
         self.selectedBall = '1'

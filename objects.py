@@ -15,6 +15,8 @@ class Player:
         self.shotsTaken = None
         self.shotsMade = None
         self.shotsMissed = None
+        self.intentionalSinks = None
+        self.unintentionalSinks = None
         self.bankShotsTaken = None
         self.bankShotsMade = None
         self.bankShotsMissed = None
@@ -57,7 +59,7 @@ class Game:
         self.winner = None
         self.loser = None
         self.gameWonByChoke = False # will be set to true if needed
-        self.ballsSunkOffBreak = None
+        self.ballsSunkOffBreak = 0
 
         # breaking player stats below
         self.BPShotsTaken = 0
@@ -66,6 +68,8 @@ class Game:
         self.BPBankShotsTaken = 0
         self.BPBankShotsMade = 0
         self.BPBankShotsMissed = 0
+        self.BPIntentionalSinks = 0
+        self.BPUnintentionalSinks = 0
         self.BPBridgeShotsTaken = 0
         self.BPBridgeShotsMade = 0
         self.BPBridgeShotsMissed = 0
@@ -99,6 +103,8 @@ class Game:
         self.IPBridgeShotsTaken = 0
         self.IPBridgeShotsMade = 0
         self.IPBridgeShotsMissed = 0
+        self.IPIntentionalSinks = 0
+        self.IPUnintentionalSinks = 0
         self.IPBehindTheBackShotsTaken = 0
         self.IPBehindTheBackShotsMade = 0
         self.IPBehindTheBackShotsMissed = 0
