@@ -97,6 +97,8 @@ def writeGameStatsToPlayers(game, breakingPlayerObj, incomingPlayerObj):
     breakingPlayerObj.shotsTaken += game.BPShotsTaken
     breakingPlayerObj.shotsMade += game.BPShotsMade
     breakingPlayerObj.shotsMissed += game.BPShotsMissed
+    breakingPlayerObj.intentionalSinks += game.BPIntentionalSinks
+    breakingPlayerObj.unintentionalSinks += game.BPUnintentionalSinks
     breakingPlayerObj.bankShotsTaken += game.BPBankShotsTaken
     breakingPlayerObj.bankShotsMade += game.BPBankShotsMade
     breakingPlayerObj.bankShotsMissed += game.BPBankShotsMissed
@@ -126,6 +128,8 @@ def writeGameStatsToPlayers(game, breakingPlayerObj, incomingPlayerObj):
     incomingPlayerObj.shotsTaken += game.IPShotsTaken
     incomingPlayerObj.shotsMade += game.IPShotsMade
     incomingPlayerObj.shotsMissed += game.IPShotsMissed
+    incomingPlayerObj.intentionalSinks += game.IPIntentionalSinks
+    incomingPlayerObj.unintentionalSinks += game.IPUnintentionalSinks
     incomingPlayerObj.bankShotsTaken += game.IPBankShotsTaken
     incomingPlayerObj.bankShotsMade += game.IPBankShotsMade
     incomingPlayerObj.bankShotsMissed += game.IPBankShotsMissed

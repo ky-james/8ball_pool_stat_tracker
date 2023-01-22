@@ -37,8 +37,8 @@ class RecordStatsWindow(QMainWindow):
         self.solidBalls = ['1', '2', '3', '4', '5', '6', '7']
         self.stripeBalls = ['9', '10', '11', '12', '13', '14', '15']
         self.ballButtonDict = dict()
-        self.pocketCoordinateDict = {'A': (117, 545), 'B': (117, 270), 'C': (420, 545), 'D': (420, 260),
-                                     'E': (723, 545), 'F': (723, 270)}
+        self.pocketCoordinateDict = {'A': (117, 270), 'B': (420, 260), 'C': (723, 270), 'D': (723, 545),
+                                     'E': (420, 548), 'F': (117, 545)}
         self.ballPositionCoordinateDict = {'1': (150, 360), '2': (225, 360), '3': (300, 360), '4': (375, 360),
                                            '5': (450, 360), '6': (525, 360), '7': (600, 360), '8': (675, 360),
                                            '9': (150, 435), '10': (225, 435), '11': (300, 435), '12': (375, 435),
@@ -198,107 +198,103 @@ class RecordStatsWindow(QMainWindow):
         self.undoTurnButton.move(183, 630)
 
         # pockets
+        # pocket F
+        self.pocketFLabel1 = QPushButton("F", self)
+        self.pocketFLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketFLabel1.resize(75, 75)
+        self.pocketFLabel1.move(74, 480)
+
+        self.pocketFLabel2 = QPushButton("F", self)
+        self.pocketFLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketFLabel2.resize(75, 75)
+        self.pocketFLabel2.move(135, 536)
+
+        self.pocketFButton = QPushButton("", self)
+        self.pocketFButton.setStyleSheet("background-color: transparent; color: rgb(255, 69, 40);")
+        self.pocketFButton.resize(75, 75)
+        self.pocketFButton.move(100, 510)
+
         # pocket A
         self.pocketALabel1 = QPushButton("A", self)
         self.pocketALabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
         self.pocketALabel1.resize(75, 75)
-        self.pocketALabel1.move(74, 480)
+        self.pocketALabel1.move(74, 283)
 
         self.pocketALabel2 = QPushButton("A", self)
         self.pocketALabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
         self.pocketALabel2.resize(75, 75)
-        self.pocketALabel2.move(135, 536)
+        self.pocketALabel2.move(135, 226)
 
         self.pocketAButton = QPushButton("", self)
-        # self.pocketAButton.setStyleSheet("background-color: white; color: blue;")
-        self.pocketAButton.setStyleSheet("background-color: transparent; color: rgb(255, 69, 40);")
+        self.pocketAButton.setStyleSheet("background-color: transparent; color: transparent;")
         self.pocketAButton.resize(75, 75)
-        self.pocketAButton.move(100, 510)
-
-        # pocket B
-        self.pocketBLabel1 = QPushButton("B", self)
-        self.pocketBLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketBLabel1.resize(75, 75)
-        self.pocketBLabel1.move(74, 283)
-
-        self.pocketBLabel2 = QPushButton("B", self)
-        self.pocketBLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketBLabel2.resize(75, 75)
-        self.pocketBLabel2.move(135, 226)
-
-        self.pocketBButton = QPushButton("", self)
-        # self.pocketBButton.setStyleSheet("background-color: white; color: blue;")
-        self.pocketBButton.setStyleSheet("background-color: transparent; color: transparent;")
-        self.pocketBButton.resize(75, 75)
-        self.pocketBButton.move(100, 250)
-
-        # pocket C
-        self.pocketCLabel1 = QPushButton("C", self)
-        self.pocketCLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketCLabel1.resize(75, 75)
-        self.pocketCLabel1.move(355, 536)
-
-        self.pocketCLabel2 = QPushButton("C", self)
-        self.pocketCLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketCLabel2.resize(75, 75)
-        self.pocketCLabel2.move(435, 536)
-
-        self.pocketCButton = QPushButton("", self)
-        # self.pocketCButton.setStyleSheet("background-color: white; color: blue;")
-        self.pocketCButton.setStyleSheet("background-color: transparent; color: transparent;")
-        self.pocketCButton.resize(75, 75)
-        self.pocketCButton.move(400, 510)
-
-        # pocket D
-        self.pocketDLabel1 = QPushButton("D", self)
-        self.pocketDLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketDLabel1.resize(75, 75)
-        self.pocketDLabel1.move(355, 226)
-
-        self.pocketDLabel2 = QPushButton("D", self)
-        self.pocketDLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketDLabel2.resize(75, 75)
-        self.pocketDLabel2.move(435, 226)
-
-        self.pocketDButton = QPushButton("", self)
-        # self.pocketDButton.setStyleSheet("background-color: white; color: blue;")
-        self.pocketDButton.setStyleSheet("background-color: transparent; color: transparent;")
-        self.pocketDButton.resize(75, 75)
-        self.pocketDButton.move(400, 250)
+        self.pocketAButton.move(100, 250)
 
         # pocket E
         self.pocketELabel1 = QPushButton("E", self)
         self.pocketELabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
         self.pocketELabel1.resize(75, 75)
-        self.pocketELabel1.move(718, 480)
+        self.pocketELabel1.move(355, 536)
 
         self.pocketELabel2 = QPushButton("E", self)
         self.pocketELabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
         self.pocketELabel2.resize(75, 75)
-        self.pocketELabel2.move(660, 536)
+        self.pocketELabel2.move(435, 536)
 
         self.pocketEButton = QPushButton("", self)
-        # self.pocketEButton.setStyleSheet("background-color: white; color: blue;")
         self.pocketEButton.setStyleSheet("background-color: transparent; color: transparent;")
         self.pocketEButton.resize(75, 75)
-        self.pocketEButton.move(695, 510)
+        self.pocketEButton.move(400, 510)
 
-        # pocket F
-        self.pocketFLabel1 = QPushButton("F", self)
-        self.pocketFLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketFLabel1.resize(75, 75)
-        self.pocketFLabel1.move(718, 283)
+        # pocket B
+        self.pocketBLabel1 = QPushButton("B", self)
+        self.pocketBLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketBLabel1.resize(75, 75)
+        self.pocketBLabel1.move(355, 226)
 
-        self.pocketFLabel2 = QPushButton("F", self)
-        self.pocketFLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
-        self.pocketFLabel2.resize(75, 75)
-        self.pocketFLabel2.move(660, 226)
+        self.pocketBLabel2 = QPushButton("B", self)
+        self.pocketBLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketBLabel2.resize(75, 75)
+        self.pocketBLabel2.move(435, 226)
 
-        self.pocketFButton = QPushButton("", self)
+        self.pocketBButton = QPushButton("", self)
+        self.pocketBButton.setStyleSheet("background-color: transparent; color: transparent;")
+        self.pocketBButton.resize(75, 75)
+        self.pocketBButton.move(400, 250)
+
+        # pocket D
+        self.pocketDLabel1 = QPushButton("D", self)
+        self.pocketDLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketDLabel1.resize(75, 75)
+        self.pocketDLabel1.move(718, 480)
+
+        self.pocketDLabel2 = QPushButton("D", self)
+        self.pocketDLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketDLabel2.resize(75, 75)
+        self.pocketDLabel2.move(660, 536)
+
+        self.pocketDButton = QPushButton("", self)
+        # self.pocketEButton.setStyleSheet("background-color: white; color: blue;")
+        self.pocketDButton.setStyleSheet("background-color: transparent; color: transparent;")
+        self.pocketDButton.resize(75, 75)
+        self.pocketDButton.move(695, 510)
+
+        # pocket C
+        self.pocketCLabel1 = QPushButton("C", self)
+        self.pocketCLabel1.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketCLabel1.resize(75, 75)
+        self.pocketCLabel1.move(718, 283)
+
+        self.pocketCLabel2 = QPushButton("C", self)
+        self.pocketCLabel2.setStyleSheet("background-color: transparent; color: white; font-size: 25px ")
+        self.pocketCLabel2.resize(75, 75)
+        self.pocketCLabel2.move(660, 226)
+
+        self.pocketCButton = QPushButton("", self)
         # self.pocketFButton.setStyleSheet("background-color: white; color: blue;")
-        self.pocketFButton.setStyleSheet("background-color: transparent; color: transparent;")
-        self.pocketFButton.resize(75, 75)
-        self.pocketFButton.move(695, 250)
+        self.pocketCButton.setStyleSheet("background-color: transparent; color: transparent;")
+        self.pocketCButton.resize(75, 75)
+        self.pocketCButton.move(695, 250)
 
         # ball buttons
         # ball 1
@@ -604,7 +600,7 @@ class RecordStatsWindow(QMainWindow):
         self.behindTheBackShot = not self.behindTheBackShot
 
     def toggleSunkOffBreak(self):
-        if self.breakingPlayerTurn:
+        if self.breakingPlayerTurn and len(self.turnLog) < 2:
             if self.sunkOffBreak:
                 self.sunkOffBreakLabel.setStyleSheet(
                     "color: rgb(255, 69, 40); font-size: 20px; background-color: transparent;")
@@ -623,7 +619,6 @@ class RecordStatsWindow(QMainWindow):
                 "color: rgb(0, 135, 32); font-size: 20px; background-color: transparent;")
             self.unintentionalShotButton.setIcon(QtGui.QIcon('images/unintentionalShotGreen.png'))
         self.unintentionalShot = not self.unintentionalShot
-
 
     def ball1Clicked(self):
         self.selectedBall = '1'
@@ -760,6 +755,9 @@ class RecordStatsWindow(QMainWindow):
         if self.sunkOffBreak:
             self.toggleSunkOffBreak()
 
+        if self.unintentionalShot:
+            self.toggleUnintentionalShot()
+
     def didPlayerSinkOwnBallType(self, ball):
         playerSunkOwnBallType = True
 
@@ -848,7 +846,7 @@ class RecordStatsWindow(QMainWindow):
 
         # creating a tuple containing relevant data from the last sink
         newestSinkEntry = (ball, pocket, self.bankShot, self.behindTheBackShot, self.bridgeShot, self.jumpShot,
-                           playerSunkOwnBallType, playerOnEightBall, self.sunkOffBreak)
+                           playerSunkOwnBallType, playerOnEightBall, self.sunkOffBreak, self.unintentionalShot)
         self.currentTurnLog.append(newestSinkEntry)
         self.sinkLog.append(newestSinkEntry)
 
@@ -1036,6 +1034,7 @@ class RecordStatsWindow(QMainWindow):
                 bridgeShot = sink[4]
                 jumpShot = sink[5]
                 sunkOffBreak = sink[8]
+                unintentionalSink = sink[9]
 
                 # it was the breaking player's turn
                 if self.breakingPlayerTurn:
@@ -1065,6 +1064,11 @@ class RecordStatsWindow(QMainWindow):
                     if sunkOffBreak:
                         self.currentGame.ballsSunkOffBreak += 1
 
+                    if unintentionalSink:
+                        self.currentGame.BPUnintentionalSinks += 1
+                    else:
+                        self.currentGame.BPIntentionalSinks += 1
+
                 # it was the incoming player's turn
                 elif not self.breakingPlayerTurn:
                     # updating the current game object's stats
@@ -1090,6 +1094,11 @@ class RecordStatsWindow(QMainWindow):
                         self.currentGame.IPJumpShotsTaken += 1
                         self.currentGame.IPJumpShotsMade += 1
 
+                    if unintentionalSink:
+                        self.currentGame.IPUnintentionalSinks += 1
+                    else:
+                        self.currentGame.IPIntentionalSinks += 1
+
                 # updating the graphics of the balls that were sunk
                 self.ballButtonDict[ball].hide()
 
@@ -1102,7 +1111,7 @@ class RecordStatsWindow(QMainWindow):
                 behindTheBackShot = lastShot[3]
                 bridgeShot = lastShot[4]
                 jumpShot = lastShot[5]
-                playerWonFromSinkingEight = lastShot[7]
+                playerWonFromSinkingEight = lastShot[7] and not lastShot[9]
 
                 # it was the breaking player's turn
                 if self.breakingPlayerTurn:
@@ -1111,6 +1120,7 @@ class RecordStatsWindow(QMainWindow):
                         # updating the all-time shooting stats
                         self.currentGame.BPShotsTaken += 1
                         self.currentGame.BPShotsMade += 1
+                        self.currentGame.BPIntentionalSinks += 1
 
                         # updating the type of shot stats
                         if bankShot:
@@ -1142,6 +1152,7 @@ class RecordStatsWindow(QMainWindow):
                         # updating the all-time shooting stats
                         self.currentGame.BPShotsTaken += 1
                         self.currentGame.BPShotsMissed += 1
+                        self.currentGame.BPUnintentionalSinks += 1
 
                         # updating the type of shot stats
                         if bankShot:
@@ -1172,6 +1183,7 @@ class RecordStatsWindow(QMainWindow):
                         # updating the all-time shooting stats
                         self.currentGame.IPShotsTaken += 1
                         self.currentGame.IPShotsMade += 1
+                        self.currentGame.IPIntentionalSinks += 1
 
                         # updating the type of shot stats
                         if bankShot:
@@ -1203,6 +1215,7 @@ class RecordStatsWindow(QMainWindow):
                         # updating the all-time shooting stats
                         self.currentGame.IPShotsTaken += 1
                         self.currentGame.IPShotsMissed += 1
+                        self.currentGame.IPUnintentionalSinks += 1
 
                         # updating the type of shot stats
                         if bankShot:
@@ -1614,6 +1627,7 @@ class RecordStatsWindow(QMainWindow):
                     playerSunkOwnBallType = shotToUndo[6]
                     playerOnEightBall = shotToUndo[7]
                     sunkOffBreak = shotToUndo[8]
+                    unintentionalSink = shotToUndo[9]
 
                     # the player sunk their own ball
                     if playerSunkOwnBallType and ball != "cue":
@@ -1641,8 +1655,13 @@ class RecordStatsWindow(QMainWindow):
                                 self.currentGame.BPJumpShotsTaken -= 1
                                 self.currentGame.BPJumpShotsMade -= 1
 
+                            if unintentionalSink:
+                                self.currentGame.BPUnintentionalSinks -= 1
+                            else:
+                                self.currentGame.BPIntentionalSinks -= 1
+
                             if sunkOffBreak:
-                                self.game.ballsSunkOffBreak -= 1
+                                self.currentGame.ballsSunkOffBreak -= 1
 
                         # it was the incoming player's sink
                         elif self.breakingPlayerTurn:
@@ -1667,6 +1686,11 @@ class RecordStatsWindow(QMainWindow):
                             if jumpShot:
                                 self.currentGame.IPJumpShotsTaken -= 1
                                 self.currentGame.IPJumpShotsMade -= 1
+
+                            if unintentionalSink:
+                                self.currentGame.IPUnintentionalSinks -= 1
+                            else:
+                                self.currentGame.IPIntentionalSinks -= 1
 
                     # the player scratched (sunk their opponent's ball or the cue ball)
                     elif not playerSunkOwnBallType or ball == "cue":
