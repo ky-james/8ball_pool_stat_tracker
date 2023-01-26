@@ -25,10 +25,10 @@ def moveToSelectPlayers():
 
 def moveToMenu(currentGame):
     # writing a new csv
+    gameList.append(recordStatsWindow.currentGame)
     writeNewCSV(playerList, gameList)
 
     currentGame = Game()
-
     # moving to the menu window
     windowStack.setCurrentIndex(0)
 

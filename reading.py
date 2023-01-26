@@ -101,14 +101,14 @@ def parseData(statSheetName):
 
             # filling the game object with the game's stats
             gameObj.gameNumber = int(line[0])
-            gameObj.date = int(line[1])
-            gameObj.BP = int(line[2])
-            gameObj.IP = int(line[3])
-            gameObj.solids = int(line[4])
-            gameObj.stripes = int(line[5])
-            gameObj.winner = int(line[6])
-            gameObj.loser = int(line[7])
-            gameObj.gameWonByChoke = int(line[8])
+            gameObj.date = line[1]
+            gameObj.BP = line[2]
+            gameObj.IP = line[3]
+            gameObj.solids = line[4]
+            gameObj.stripes = line[5]
+            gameObj.winner = line[6]
+            gameObj.loser = line[7]
+            gameObj.gameWonByChoke = line[8]
             gameObj.ballsSunkOffBreak = int(line[9])
             gameObj.BPShotsTaken = int(line[10])
             gameObj.BPShotsMade = int(line[11])
